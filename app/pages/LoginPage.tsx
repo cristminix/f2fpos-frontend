@@ -2,7 +2,9 @@ import React, { useState } from "react"
 import { Box, Button, TextField, Typography, Container, Paper, Grid } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import { type Theme } from "@mui/material"
-
+export function meta({}: Route.MetaArgs) {
+  return [{ title: "Login" }, { name: "description", content: "Login" }]
+}
 const StyledPaper = styled(Paper)(({ theme }: { theme: Theme }) => ({
   padding: theme.spacing(4),
   display: "flex",
@@ -24,13 +26,15 @@ const StyledButton = styled(Button)(({ theme }: { theme: Theme }) => ({
 
 import { useNavigate } from "react-router"
 import { useAuth } from "../contexts/AuthContext"
+import type { Route } from "../+types/root"
 
 const LoginPage: React.FC = () => {
   const { login, isAuthenticated } = useAuth()
   const navigate = useNavigate()
   const [error, setError] = useState<string | null>(null)
-
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [emailError, setEmailError] = useState<string>("")
+  const [passwordError, setPasswordError] = useState<string>("")
 
   // Redirect to home if user is already authenticated
   React.useEffect(() => {
@@ -39,14 +43,54 @@ const LoginPage: React.FC = () => {
     }
   }, [isAuthenticated, navigate])
 
+  const validateEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(email)
+  }
+
+  const validatePassword = (password: string): boolean => {
+    // Password minimal 6 karakter
+    return password.length >= 6
+  }
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
     setError(null)
     setIsSubmitting(true)
 
+    // Reset errors
+    setEmailError("")
+    setPasswordError("")
+
     const formData = new FormData(event.target as HTMLFormElement)
     const email = formData.get("email") as string
     const password = formData.get("password") as string
+
+    let isValid = true
+
+    // Validate email
+    if (!email) {
+      setEmailError("Email is required")
+      isValid = false
+    } else if (!validateEmail(email)) {
+      setEmailError("Please enter a valid email address")
+      isValid = false
+    }
+
+    // Validate password
+    if (!password) {
+      setPasswordError("Password is required")
+      isValid = false
+    } else if (!validatePassword(password)) {
+      setPasswordError("Password must be at least 6 characters")
+      isValid = false
+    }
+
+    // Stop if validation fails
+    if (!isValid) {
+      setIsSubmitting(false)
+      return
+    }
 
     // Dummy authentication - in real app, this would be an API call
     if (email && password) {
@@ -78,11 +122,11 @@ const LoginPage: React.FC = () => {
         <StyledForm onSubmit={handleSubmit} noValidate>
           <Grid container spacing={2}>
             <Grid size={12}>
-              <TextField margin="normal" required fullWidth id="email" label="Email" name="email" autoComplete="email" autoFocus />
+              <TextField margin="normal" required fullWidth id="email" label="Email" name="email" autoComplete="email" autoFocus error={!!emailError} helperText={emailError} />
             </Grid>
 
             <Grid size={12}>
-              <TextField margin="normal" required fullWidth name="password" label="Password" type="password" id="password" autoComplete="current-password" />
+              <TextField margin="normal" required fullWidth name="password" label="Password" type="password" id="password" autoComplete="current-password" error={!!passwordError} helperText={passwordError} />
             </Grid>
           </Grid>
           <StyledButton type="submit" fullWidth variant="contained" color="primary" disabled={isSubmitting}>
