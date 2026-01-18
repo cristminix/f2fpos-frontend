@@ -1,0 +1,19 @@
+{
+  "version": "1.0",
+  "devtools": {
+    "inspector": {
+      "enabled": true,
+      "features": [
+        "elements",
+        "console",
+        "network",
+        "sources",
+        "timeline",
+        "profiles",
+        "resources",
+        "security",
+        "application"
+      ]
+    }
+  }
+}

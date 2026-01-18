@@ -19,3 +19,7 @@ Pastikan semua interaksi kode dan eksekusi terminal mengikuti standar berikut:
 
 - Prioritaskan penulisan kode dalam TypeScript dengan tipe data yang eksplisit (strong typing).
 - Hindari penggunaan file JavaScript (.js) kecuali ada batasan teknis yang sangat spesifik.
+
+## Penting
+
+- This project using react-router version 7

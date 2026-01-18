@@ -6,4 +6,6 @@ export default [
   route("/material-grid", "pages/MaterialUIGridPage.tsx"),
   route("/grid-table-form", "pages/GridTableFormPage.tsx"),
   route("/login", "pages/LoginPage.tsx"),
+  route("/logout", "pages/LogoutPage.tsx"),
+  route("/unauthorized", "pages/UnauthorizedPage.tsx"),
 ] satisfies RouteConfig
