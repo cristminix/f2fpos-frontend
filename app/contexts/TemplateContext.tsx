@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState } from "react"
 import type { ReactNode } from "react"
+import Navigation from "~/components/ui/Navigation"
 
 interface TemplateConfig {
   component: React.ComponentType<any>
@@ -16,9 +17,7 @@ interface TemplateContextType {
   setTemplate: (templateName: string) => void
 }
 
-const TemplateContext = createContext<TemplateContextType | undefined>(
-  undefined,
-)
+const TemplateContext = createContext<TemplateContextType | undefined>(undefined)
 
 // Default template components
 const PublicTemplate: React.FC<{
@@ -34,9 +33,7 @@ const PublicTemplate: React.FC<{
         </header>
       )}
       <main className="container mx-auto p-4">{children}</main>
-      {showFooter && (
-        <footer className="bg-gray-100 p-4 mt-8 border-t">Public Footer</footer>
-      )}
+      {showFooter && <footer className="bg-gray-100 p-4 mt-8 border-t">Public Footer</footer>}
     </div>
   )
 }
@@ -46,33 +43,10 @@ const ProtectedTemplate: React.FC<{
   showSidebar?: boolean
 }> = ({ children, showSidebar = true }) => {
   return (
-    <div className="protected-template flex min-h-screen">
-      {showSidebar && (
-        <aside className="w-64 bg-gray-800 text-white p-4">
-          <nav>
-            <ul>
-              <li className="mb-2">
-                <a href="/dashboard" className="text-blue-300 hover:text-white">
-                  Dashboard
-                </a>
-              </li>
-              <li className="mb-2">
-                <a href="/profile" className="text-blue-300 hover:text-white">
-                  Profile
-                </a>
-              </li>
-              <li className="mb-2">
-                <a href="/settings" className="text-blue-300 hover:text-white">
-                  Settings
-                </a>
-              </li>
-            </ul>
-          </nav>
-        </aside>
-      )}
+    <div className="protected-template flex">
       <div className="flex-1">
-        <header className="bg-gray-100 p-4 shadow-md">
-          <h1>Protected Area</h1>
+        <header className="bg-gray-100 p-2 shadow-md flex">
+          {showSidebar && <Navigation />} <h1 className="p-3">Protected Area</h1>
         </header>
         <main className="container mx-auto p-4">{children}</main>
       </div>
@@ -86,39 +60,9 @@ const AdminTemplate: React.FC<{
 }> = ({ children, showAdminNav = true }) => {
   return (
     <div className="admin-template flex min-h-screen">
-      {showAdminNav && (
-        <aside className="w-64 bg-red-800 text-white p-4">
-          <nav>
-            <h2 className="text-lg font-bold mb-4">Admin Panel</h2>
-            <ul>
-              <li className="mb-2">
-                <a href="/admin" className="text-yellow-200 hover:text-white">
-                  Dashboard
-                </a>
-              </li>
-              <li className="mb-2">
-                <a
-                  href="/admin/users"
-                  className="text-yellow-200 hover:text-white"
-                >
-                  Users
-                </a>
-              </li>
-              <li className="mb-2">
-                <a
-                  href="/admin/settings"
-                  className="text-yellow-200 hover:text-white"
-                >
-                  System Settings
-                </a>
-              </li>
-            </ul>
-          </nav>
-        </aside>
-      )}
       <div className="flex-1">
-        <header className="bg-red-100 p-4 shadow-md">
-          <h1>Admin Area</h1>
+        <header className="bg-red-100 p-4 shadow-md flex">
+          {showAdminNav && <Navigation />} <h1 className="p-3">Admin Area</h1>
         </header>
         <main className="container mx-auto p-4">{children}</main>
       </div>
@@ -126,9 +70,7 @@ const AdminTemplate: React.FC<{
   )
 }
 
-export const TemplateProvider: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
+export const TemplateProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [currentTemplate, setCurrentTemplate] = useState("public")
 
   const templates: Record<string, TemplateConfig> = {
@@ -165,11 +107,7 @@ export const TemplateProvider: React.FC<{ children: ReactNode }> = ({
     templates,
   }
 
-  return (
-    <TemplateContext.Provider value={value}>
-      {children}
-    </TemplateContext.Provider>
-  )
+  return <TemplateContext.Provider value={value}>{children}</TemplateContext.Provider>
 }
 
 export const useTemplate = (): TemplateContextType => {

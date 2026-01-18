@@ -1,10 +1,10 @@
 name = "f2fpos-frontend"
 compatibility_date = "2024-01-01"
-pages_build_output_dir = "./build/client"
 
 [env.production]
-account_id = "your-account-id"
+account_id = "your-account-id"  # Ganti dengan Cloudflare Account ID Anda
+zone_id = "your-zone-id"      # Ganti dengan Cloudflare Zone ID Anda
 
-[[routes]]
-pattern = "your-domain.com/*"
-zone_id = "your-zone-id"
+[pages]
+build_command = "pnpm run build"
+destination_dir = "build/client"

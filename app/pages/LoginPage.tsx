@@ -1,13 +1,5 @@
 import React, { useState } from "react"
-import {
-  Box,
-  Button,
-  TextField,
-  Typography,
-  Container,
-  Paper,
-  Grid,
-} from "@mui/material"
+import { Box, Button, TextField, Typography, Container, Paper, Grid } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import { type Theme } from "@mui/material"
 
@@ -53,18 +45,18 @@ const LoginPage: React.FC = () => {
     setIsSubmitting(true)
 
     const formData = new FormData(event.target as HTMLFormElement)
-    const username = formData.get("username") as string
+    const email = formData.get("email") as string
     const password = formData.get("password") as string
 
     // Dummy authentication - in real app, this would be an API call
-    if (username && password) {
+    if (email && password) {
       // Create dummy user data
       const dummyUser = {
         id: "1",
-        username: username,
-        email: `${username}@example.com`,
+        username: email.split("@")[0], // Extract username from email
+        email: email,
         role: "user",
-        name: username,
+        name: email.split("@")[0],
       }
 
       // Save user data to localStorage via AuthContext
@@ -72,7 +64,7 @@ const LoginPage: React.FC = () => {
 
       // The navigation will be handled by the useEffect above
     } else {
-      setError("Please enter both username and password.")
+      setError("Please enter both email and password.")
       setIsSubmitting(false)
     }
   }
@@ -85,49 +77,24 @@ const LoginPage: React.FC = () => {
         </Typography>
         <StyledForm onSubmit={handleSubmit} noValidate>
           <Grid container spacing={2}>
-            {/*@ts-ignore*/}
-            <Grid item xs={12}>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="username"
-                label="Username"
-                name="username"
-                autoComplete="username"
-                autoFocus
-              />
+            <Grid size={12}>
+              <TextField margin="normal" required fullWidth id="email" label="Email" name="email" autoComplete="email" autoFocus />
             </Grid>
-            {/*@ts-ignore*/}
-            <Grid item xs={12}>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-              />
+
+            <Grid size={12}>
+              <TextField margin="normal" required fullWidth name="password" label="Password" type="password" id="password" autoComplete="current-password" />
             </Grid>
           </Grid>
-          <StyledButton
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? "Signing In..." : "Sign In"}
+          <StyledButton type="submit" fullWidth variant="contained" color="primary" disabled={isSubmitting}>
+            {isSubmitting ? "Logging In..." : "Login"}
           </StyledButton>
           <Grid container>
-            {/* <Grid item xs={12}>
+            {/* <Grid size={12}>
               <Link href="#" variant="body2">
                 Forgot password?
               </Link>
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Link href="#" variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
