@@ -8,10 +8,12 @@ const ProtectedTemplate: React.FC<{
   return (
     <div className="protected-template flex">
       <div className="flex-1">
-        <header className="bg-gray-100 p-2 shadow-md flex">
-          {showSidebar && <Navigation />} <h1 className="p-3">Protected Area</h1>
+        <header className="bg-gray-100 px-4 py-2 shadow-md flex">
+          <div className="pl-2 flex">
+            {showSidebar && <Navigation />} <h1 className="pt-3">F2F POS</h1>
+          </div>
         </header>
-        <main className="container mx-auto p-4">{children}</main>
+        <main className="container p-8">{children}</main>
       </div>
     </div>
   )
