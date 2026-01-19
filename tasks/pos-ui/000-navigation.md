@@ -1,0 +1,3 @@
+- Navigasi Berbentuk Drawer
+- Terdapat Pemilihan Outlet Dropdown
+- Perubahan ini mengubah konfigurasi data client app

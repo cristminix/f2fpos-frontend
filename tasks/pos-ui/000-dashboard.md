@@ -12,7 +12,7 @@
 - Total Transaksi
 - Laba Kotor (Estimasi)
 - Rata-rata Basket (Nilai penjualan rata-rata tiap transaksi sales)
-- Grafik tren penjualan
+- Grafik tren penjualan berbentuk kurva (date range,omset)
 - List Produk terlaris menampilkan (nama produk,total penjualan,nilai penjualan)
 
 data yang dihasilkan:

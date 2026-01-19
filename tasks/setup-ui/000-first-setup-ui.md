@@ -1,0 +1,5 @@
+- Penambahan data Outlet Pertama Kali
+  - Penentuan Jenis Outlet, Retail,Resto
+  - Mengisi detail data outlet
+- Penambahan data staff Pertama Kali
+  - Mengisi data staff
