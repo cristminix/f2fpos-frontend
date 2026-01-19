@@ -2,7 +2,59 @@ import React, { useEffect } from "react"
 import { Box, Typography, Card, CardContent, Grid } from "@mui/material"
 import DashboardCard from "../components/common/DashboardCard"
 import ApexCharts from "apexcharts"
+import Table from "@mui/material/Table"
+import TableBody from "@mui/material/TableBody"
+import TableCell from "@mui/material/TableCell"
+import TableContainer from "@mui/material/TableContainer"
+import TableHead from "@mui/material/TableHead"
+import TableRow from "@mui/material/TableRow"
+import Paper from "@mui/material/Paper"
+
+function createData(no: number, name: string, qty: number, total: number) {
+  return { no, name, qty, total }
+}
+
+const rows = [
+  createData(1, "Frozen yoghurt", 159, 20000),
+  createData(2, "Ice cream sandwich", 237, 20000),
+  createData(3, "Eclair", 262, 20000),
+  createData(4, "Cupcake", 305, 20000),
+  createData(5, "Gingerbread", 356, 20000),
+]
+
+function BasicTable() {
+  return (
+    <TableContainer component={Paper}>
+      <Table aria-label="simple table">
+        <TableBody>
+          {rows.map((row) => (
+            <TableRow
+              key={row.name}
+              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+            >
+              <TableCell align="left">{row.no}</TableCell>
+              <TableCell align="left">
+                <div>{row.name} </div>
+                <div>{row.qty} Unit</div>
+              </TableCell>
+              <TableCell align="right">Rp{row.total}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  )
+}
+
+// State to keep track of the chart instance
+let chartInstance: ApexCharts | null = null
+
 const loadChart = () => {
+  // Destroy the existing chart if it exists to prevent duplicates
+  if (chartInstance) {
+    chartInstance.destroy()
+  }
+
   const chartConfig = {
     series: [
       {
@@ -96,6 +148,9 @@ const loadChart = () => {
   )
 
   chart.render()
+
+  // Store the chart instance for cleanup
+  chartInstance = chart
 }
 const DashboardPage: React.FC = () => {
   const dashboardItems = [
@@ -112,7 +167,7 @@ const DashboardPage: React.FC = () => {
     {
       id: 3,
       title: "Laba Kotor (Est.)",
-      value: "Rp 1300",
+      value: "Rp 500.000",
     },
     {
       id: 4,
@@ -122,6 +177,14 @@ const DashboardPage: React.FC = () => {
   ]
   useEffect(() => {
     loadChart()
+
+    // Cleanup function to destroy the chart when component unmounts
+    return () => {
+      if (chartInstance) {
+        chartInstance.destroy()
+        chartInstance = null
+      }
+    }
   }, [])
   return (
     <>
@@ -178,6 +241,9 @@ const DashboardPage: React.FC = () => {
                   <Typography variant="h5" gutterBottom>
                     Produk Terlaris
                   </Typography>
+                  <Box sx={{ height: 400, width: "100%" }}>
+                    <BasicTable />
+                  </Box>
                 </CardContent>
               </Card>
             </Grid>
