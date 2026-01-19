@@ -8,4 +8,5 @@ export default [
   route("/login", "pages/LoginPage.tsx"),
   route("/logout", "pages/LogoutPage.tsx"),
   route("/unauthorized", "pages/UnauthorizedPage.tsx"),
+  route("/dashboard", "routes/dashboard.tsx"),
 ] satisfies RouteConfig

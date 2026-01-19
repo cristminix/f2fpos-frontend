@@ -6,6 +6,7 @@ interface GridItem {
   title: string
   description: string
   color?: string
+  component?: React.ReactNode
 }
 
 interface MaterialUIGridProps {
@@ -42,30 +43,34 @@ export const MaterialUIGrid = ({
       description: "Deskripsi card keempat dengan konten contoh",
     },
   ],
-  columns = { xs: 12, sm: 6, md: 4, lg: 3 },
+  columns = { xs: 12, sm: 6, md: 4, lg: 4 },
 }: MaterialUIGridProps) => {
   return (
     <Grid container spacing={3}>
       {items.map((item) => (
         <Grid {...columns} key={item.id}>
-          <Card
-            sx={{
-              height: "100%",
-              display: "flex",
-              flexDirection: "column",
-              backgroundColor: "background.paper",
-              color: "text.primary",
-            }}
-          >
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
-                {item.title}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {item.description}
-              </Typography>
-            </CardContent>
-          </Card>
+          {item.component ? (
+            item.component
+          ) : (
+            <Card
+              sx={{
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                backgroundColor: "background.paper",
+                color: "text.primary",
+              }}
+            >
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                  {item.title}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {item.description}
+                </Typography>
+              </CardContent>
+            </Card>
+          )}
         </Grid>
       ))}
     </Grid>
