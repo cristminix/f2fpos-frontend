@@ -20,6 +20,19 @@ Pastikan semua interaksi kode dan eksekusi terminal mengikuti standar berikut:
 - Prioritaskan penulisan kode dalam TypeScript dengan tipe data yang eksplisit (strong typing).
 - Hindari penggunaan file JavaScript (.js) kecuali ada batasan teknis yang sangat spesifik.
 
-## Penting
+## Code Generation Guidlines
 
-- This project using react-router version 7
+- Always use es module
+- Always create file with SOLID principle never create large typescript file
+- Always create generic class into separate file then use import syntax to use it then save to `app\utils\classes`
+- Always create logic or common function to separate file then use import syntax to use it then save to `app\utils\fn`
+- Always create route component to `app\routes` after creating new page component and dont forget to attach the main router config file `app\routes.ts`
+- Jangan pernah membuat dokumentasi baru tanpa konfirmasi terlebih dahulu
+
+## Important
+
+- This project built using react-router version 7
+- This project built using material-ui version 7
+- This project built using tailwindcss version 4
+- Always use context7 before implementing
+- Never ask for running `pnpm dev` just ask to do it myself

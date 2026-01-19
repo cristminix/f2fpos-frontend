@@ -15,6 +15,9 @@ app/
 ├── services/            # Layanan backend dan API
 ├── hooks/               # React hooks kustom
 ├── utils/               # Fungsi utilitas
+├── tests/               # Tests Files
+│   ├── classes/         # Generic Class
+│   └── fn/              # Shared function
 ├── types/               # Definisi tipe TypeScript
 └── App.tsx              # Entry point utama
 ```

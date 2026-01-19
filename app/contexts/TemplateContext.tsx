@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState } from "react"
 import type { ReactNode } from "react"
-import Navigation from "~/components/ui/Navigation"
+import PublicTemplate from "~/components/templates/PublicTemplate"
+import ProtectedTemplate from "~/components/templates/ProtectedTemplate"
+import AdminTemplate from "~/components/templates/AdminTemplate"
 
 interface TemplateConfig {
   component: React.ComponentType<any>
@@ -18,57 +20,6 @@ interface TemplateContextType {
 }
 
 const TemplateContext = createContext<TemplateContextType | undefined>(undefined)
-
-// Default template components
-const PublicTemplate: React.FC<{
-  children: ReactNode
-  showHeader?: boolean
-  showFooter?: boolean
-}> = ({ children, showHeader = true, showFooter = true }) => {
-  return (
-    <div className="public-template">
-      {showHeader && (
-        <header className="bg-gray-100 p-4 shadow-md">
-          <h1>Public Header</h1>
-        </header>
-      )}
-      <main className="container mx-auto p-4">{children}</main>
-      {showFooter && <footer className="bg-gray-100 p-4 mt-8 border-t">Public Footer</footer>}
-    </div>
-  )
-}
-
-const ProtectedTemplate: React.FC<{
-  children: ReactNode
-  showSidebar?: boolean
-}> = ({ children, showSidebar = true }) => {
-  return (
-    <div className="protected-template flex">
-      <div className="flex-1">
-        <header className="bg-gray-100 p-2 shadow-md flex">
-          {showSidebar && <Navigation />} <h1 className="p-3">Protected Area</h1>
-        </header>
-        <main className="container mx-auto p-4">{children}</main>
-      </div>
-    </div>
-  )
-}
-
-const AdminTemplate: React.FC<{
-  children: ReactNode
-  showAdminNav?: boolean
-}> = ({ children, showAdminNav = true }) => {
-  return (
-    <div className="admin-template flex min-h-screen">
-      <div className="flex-1">
-        <header className="bg-red-100 p-4 shadow-md flex">
-          {showAdminNav && <Navigation />} <h1 className="p-3">Admin Area</h1>
-        </header>
-        <main className="container mx-auto p-4">{children}</main>
-      </div>
-    </div>
-  )
-}
 
 export const TemplateProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [currentTemplate, setCurrentTemplate] = useState("public")
