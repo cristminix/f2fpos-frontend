@@ -1,2 +1,4 @@
 - create responsive grid layout
 - create ResponsiveGridLayoutPage test page component
+- implement template layout based on user role
+- implement service fetch mockup using nock
