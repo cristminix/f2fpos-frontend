@@ -30,7 +30,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
             {title}
           </Typography>
         </Box>
-        <Typography variant="h5" component="div">
+        <Typography variant="h4" component="div" className="text-xl">
           {value}
         </Typography>
       </CardContent>
