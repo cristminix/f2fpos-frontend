@@ -10,6 +10,10 @@ import {
   IconButton,
   Divider,
   Box,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
 } from "@mui/material"
 import MenuIcon from "@mui/icons-material/Menu"
 import HomeIcon from "@mui/icons-material/Home"
@@ -32,6 +36,7 @@ import AnalyticsIcon from "@mui/icons-material/Analytics"
 import LogoutIcon from "@mui/icons-material/Logout"
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false)
+  const [selectedOutlet, setSelectedOutlet] = useState("")
 
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -86,6 +91,57 @@ const Navigation = () => {
       onClick={toggleDrawer(false)}
       onKeyDown={toggleDrawer(false)}
     >
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          p: 2,
+          backgroundColor: "primary.main",
+          color: "white",
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <Box
+            component="img"
+            src="https://i.pinimg.com/736x/c0/5b/a5/c05ba59a93d4e7ca51cafd2575a21b84.jpg"
+            alt="Avatar"
+            sx={{
+              width: 56,
+              height: 56,
+              borderRadius: "50%",
+              mr: 2,
+              border: "2px solid white",
+              objectFit: "cover",
+            }}
+          />
+          <Box sx={{ flex: 1 }}>
+            <Box sx={{ fontWeight: "bold" }}>Lisa</Box>
+            <Box sx={{ fontSize: "small", opacity: 0.8 }}>Protected</Box>
+          </Box>
+        </Box>
+        <Box sx={{ pt: 2, mt: 1 }} onClick={(e) => e.stopPropagation()}>
+          <FormControl fullWidth size="small">
+            <InputLabel id="outlet-select-label">Pilih Outlet</InputLabel>
+            <Select
+              labelId="outlet-select-label"
+              value={selectedOutlet}
+              label="Pilih Outlet"
+              sx={{ backgroundColor: "white", minWidth: 120 }}
+              onChange={(e) => setSelectedOutlet(e.target.value as string)}
+            >
+              <MenuItem value="cafe-senja">Cafe Senja</MenuItem>
+              <MenuItem value="f2f-mart">F2F Mart</MenuItem>
+              <MenuItem value="f2f-laundry">F2F Laundry</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
+      </Box>
+      <Divider />
       <List>
         {menuItems.map((item, index) => (
           <ListItem key={item.text} disablePadding>

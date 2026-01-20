@@ -1,5 +1,16 @@
-import React, { useEffect } from "react"
-import { Box, Typography, Card, CardContent, Grid } from "@mui/material"
+import React, { useEffect, useState } from "react"
+import {
+  Box,
+  Typography,
+  Card,
+  CardContent,
+  Grid,
+  IconButton,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material"
 import DashboardCard from "../components/common/DashboardCard"
 import ApexCharts from "apexcharts"
 import Table from "@mui/material/Table"
@@ -9,6 +20,12 @@ import TableContainer from "@mui/material/TableContainer"
 import TableHead from "@mui/material/TableHead"
 import TableRow from "@mui/material/TableRow"
 import Paper from "@mui/material/Paper"
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth"
+import ChevronRightIcon from "@mui/icons-material/ChevronRight"
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers"
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
+import dayjs, { Dayjs } from "dayjs"
 
 function createData(no: number, name: string, qty: number, total: number) {
   return { no, name, qty, total }
@@ -153,6 +170,16 @@ const loadChart = () => {
   chartInstance = chart
 }
 const DashboardPage: React.FC = () => {
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const [selectedDateRange, setSelectedDateRange] =
+    React.useState<string>("Hari Ini")
+  const [dateRange, setDateRange] = React.useState<
+    [Dayjs | null, Dayjs | null]
+  >([dayjs().subtract(7, "day"), dayjs()])
+  const [showDatePickers, setShowDatePickers] = React.useState<boolean>(false)
+
+  const menuItems = ["Hari Ini", "Kemarin", "7 Hari Terakhir", "Bulan Ini"]
+
   const dashboardItems = [
     {
       id: 1,
@@ -189,9 +216,118 @@ const DashboardPage: React.FC = () => {
   return (
     <>
       <Box sx={{ flexGrow: 1, p: 3, width: "100%" }}>
-        <Typography variant="h4" gutterBottom>
-          Dashboard
-        </Typography>
+        <Box className="flex justify-between">
+          <Box>
+            <Typography variant="h4" gutterBottom>
+              Dashboard
+            </Typography>
+            <div>Outlet: F2F Mart</div>
+          </Box>
+          <Box>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "10px 12px",
+                border: "1px solid #ccc",
+                borderRadius: "4px",
+                cursor: "pointer",
+                backgroundColor: "white",
+                minWidth: "200px",
+              }}
+              onClick={(event) => setAnchorEl(event.currentTarget)}
+            >
+              <CalendarMonthIcon fontSize="small" />
+              <span style={{ flexGrow: 1 }}>
+                {selectedDateRange === "Rentang Tanggal"
+                  ? `${dateRange[0]?.format("DD/MM/YYYY")} - ${dateRange[1]?.format("DD/MM/YYYY")}`
+                  : selectedDateRange}
+              </span>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                {Boolean(anchorEl) ? (
+                  <ExpandMoreIcon
+                    fontSize="small"
+                    style={{ transform: "rotate(180deg)" }}
+                  />
+                ) : (
+                  <ExpandMoreIcon fontSize="small" />
+                )}
+              </div>
+            </div>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={() => setAnchorEl(null)}
+            >
+              {menuItems.map((item, index) => (
+                <MenuItem
+                  key={index}
+                  onClick={() => {
+                    setSelectedDateRange(item)
+                    setAnchorEl(null)
+                  }}
+                >
+                  <ListItemText>{item}</ListItemText>
+                </MenuItem>
+              ))}
+              <MenuItem
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setShowDatePickers(true)
+                  setSelectedDateRange("Rentang Tanggal")
+                }}
+              >
+                <ListItemIcon>
+                  <CalendarMonthIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Rentang Tanggal</ListItemText>
+              </MenuItem>
+              {showDatePickers && (
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      p: 2,
+                      gap: 1,
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <DatePicker
+                      label="Tanggal Mulai"
+                      value={dateRange[0]}
+                      onChange={(newValue) => {
+                        setDateRange([newValue, dateRange[1]])
+                        if (newValue && dateRange[1]) {
+                          setTimeout(() => setAnchorEl(null), 300)
+                        }
+                      }}
+                      maxDate={dateRange[1] || undefined}
+                    />
+                    <DatePicker
+                      label="Tanggal Akhir"
+                      value={dateRange[1]}
+                      onChange={(newValue) => {
+                        setDateRange([dateRange[0], newValue])
+                        if (dateRange[0] && newValue) {
+                          setTimeout(() => setAnchorEl(null), 300)
+                        }
+                      }}
+                      minDate={dateRange[0] || undefined}
+                    />
+                  </Box>
+                </LocalizationProvider>
+              )}
+            </Menu>
+          </Box>
+        </Box>
+
         <Box sx={{ flexGrow: 1 }} mt={3}>
           <Grid container spacing={2}>
             {dashboardItems.map((item, i) => {
