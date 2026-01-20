@@ -17,6 +17,13 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete"
 import AddIcon from "@mui/icons-material/Add"
 import RemoveIcon from "@mui/icons-material/Remove"
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart"
+import PersonIcon from "@mui/icons-material/Person"
+import TableRestaurantIcon from "@mui/icons-material/TableRestaurant"
+import ChevronRightIcon from "@mui/icons-material/ChevronRight"
+import SoupKitchenIcon from "@mui/icons-material/SoupKitchen"
+import PaymentsIcon from "@mui/icons-material/Payments"
+import QrCode2Icon from "@mui/icons-material/QrCode2"
 
 interface ProductItem {
   id: string
@@ -30,20 +37,25 @@ interface ProductBasketProps {
   items?: ProductItem[]
   onRemoveItem?: (id: string) => void
   onUpdateQuantity?: (id: string, quantity: number) => void
-  onCheckout?: () => void
+  onDiscountChange?: (discount: number) => void
+  onCheckout?: (discount?: number) => void
 }
 
 const ProductBasket: React.FC<ProductBasketProps> = ({
   items = [],
   onRemoveItem = () => {},
   onUpdateQuantity = () => {},
+  onDiscountChange = () => {},
   onCheckout = () => {},
 }) => {
+  const [discountPercent, setDiscountPercent] = React.useState<number>(0)
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0)
   const totalPrice = items.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0,
   )
+  const discountAmount = totalPrice * (discountPercent / 100)
+  const finalPrice = totalPrice - discountAmount
 
   const handleIncreaseQuantity = (id: string) => {
     const item = items.find((i) => i.id === id)
@@ -68,7 +80,10 @@ const ProductBasket: React.FC<ProductBasketProps> = ({
             alignItems="center"
             justifyContent="space-between"
           >
-            <Typography variant="h6">Keranjang Belanja</Typography>
+            <Box display="flex" alignItems="center">
+              <ShoppingCartIcon sx={{ mr: 1 }} />
+              <Typography variant="h6">Keranjang</Typography>
+            </Box>
             <Chip
               label={`${totalItems} item`}
               size="small"
@@ -77,7 +92,7 @@ const ProductBasket: React.FC<ProductBasketProps> = ({
             />
           </Box>
         }
-        sx={{ backgroundColor: "#f5f5f5" }}
+        sx={{}}
       />
       <CardContent
         sx={{ flexGrow: 1, p: 0, display: "flex", flexDirection: "column" }}
@@ -133,21 +148,125 @@ const ProductBasket: React.FC<ProductBasketProps> = ({
               ))}
             </List>
             <Box p={2} borderTop="1px solid #e0e0e0">
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+                mb={2}
+                onClick={() => {}}
+                sx={{ cursor: "pointer" }}
+              >
+                <Box display="flex" alignItems="center">
+                  <PersonIcon sx={{ mr: 1, color: "action.active" }} />
+                  <Typography variant="body1">Pelanggan</Typography>
+                </Box>
+                <IconButton size="small" edge="end">
+                  <Typography variant="body1">Umum</Typography>
+                  <ChevronRightIcon />
+                </IconButton>
+              </Box>
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+                mb={2}
+                onClick={() => {}}
+                sx={{ cursor: "pointer" }}
+              >
+                <Box display="flex" alignItems="center">
+                  <TableRestaurantIcon sx={{ mr: 1, color: "action.active" }} />
+                  <Typography variant="body1">Meja</Typography>
+                </Box>
+                <IconButton size="small" edge="end">
+                  <Typography variant="body1">Pilih Meja</Typography>
+                  <ChevronRightIcon />
+                </IconButton>
+              </Box>
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+                mb={2}
+                onClick={() => {}}
+                sx={{ cursor: "pointer" }}
+              >
+                <Box display="flex" alignItems="center">
+                  <Typography variant="body1">Diskon</Typography>
+                </Box>
+                <IconButton size="small" edge="end">
+                  <input
+                    type="number"
+                    placeholder="0"
+                    min="0"
+                    max="100"
+                    value={discountPercent}
+                    onChange={(e) => {
+                      const value = Number(e.target.value)
+                      setDiscountPercent(value)
+                      onDiscountChange(value)
+                    }}
+                    style={{
+                      width: "60px",
+                      textAlign: "center",
+                      border: "1px solid #ccc",
+                      borderRadius: "4px",
+                      padding: "4px",
+                      marginRight: "8px",
+                    }}
+                  />
+                  <Typography variant="body1">%</Typography>
+                </IconButton>
+              </Box>
+              <Box display="flex" justifyContent="space-between" mb={1}>
+                <Typography variant="body1">Subtotal:</Typography>
+                <Typography variant="body1">
+                  Rp {totalPrice.toLocaleString("id-ID")}
+                </Typography>
+              </Box>
+              <Box display="flex" justifyContent="space-between" mb={1}>
+                <Typography variant="body1">
+                  Diskon ({discountPercent}%):
+                </Typography>
+                <Typography variant="body1">
+                  -Rp {discountAmount.toLocaleString("id-ID")}
+                </Typography>
+              </Box>
               <Box display="flex" justifyContent="space-between" mb={2}>
                 <Typography variant="h6">Total:</Typography>
                 <Typography variant="h6" color="primary">
-                  Rp {totalPrice.toLocaleString("id-ID")}
+                  Rp {finalPrice.toLocaleString("id-ID")}
                 </Typography>
               </Box>
               <Button
                 variant="contained"
                 color="primary"
                 fullWidth
-                onClick={onCheckout}
+                onClick={() => onCheckout(discountPercent)}
                 disabled={items.length === 0}
               >
-                Checkout
+                <SoupKitchenIcon sx={{ mr: 1 }} />
+                Open Bill (DAPUR)
               </Button>
+              <Box display="flex" gap={2} mt={2}>
+                <Button
+                  variant="contained"
+                  color="success"
+                  startIcon={<PaymentsIcon />}
+                  fullWidth
+                  onClick={() => console.log("TUNAI clicked")}
+                >
+                  TUNAI
+                </Button>
+                <Button
+                  variant="contained"
+                  color="info"
+                  startIcon={<QrCode2Icon />}
+                  fullWidth
+                  onClick={() => console.log("QRIS clicked")}
+                >
+                  QRIS
+                </Button>
+              </Box>
             </Box>
           </>
         ) : (
