@@ -1,8 +1,10 @@
 import type { Route } from "./+types/home"
-import { Welcome } from "../pages/welcome"
-import App from "~/App"
+
 import ProtectedRoute from "~/components/guards/ProtectedRoute"
 import ProtectedLayout from "~/components/layouts/ProtectedLayout"
+import React, { useEffect } from "react"
+import { useNavigate } from "react-router"
+import { useAuth } from "../contexts/AuthContext"
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -12,12 +14,19 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home() {
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    // Panggil fungsi logout untuk menghapus sesi pengguna
+
+    // Arahkan pengguna ke halaman login setelah logout
+    navigate("/dashboard")
+  }, [navigate])
   return (
     <ProtectedRoute>
       <ProtectedLayout>
         <div>
-          <h1>Dashboard</h1>
-          <p>Welcome to your dashboard!</p>
+          <p>redirecting ...</p>
         </div>
       </ProtectedLayout>
     </ProtectedRoute>
