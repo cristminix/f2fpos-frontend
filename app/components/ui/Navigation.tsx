@@ -59,7 +59,7 @@ const Navigation = () => {
       icon: <HistoryIcon />,
       path: "/sales/history",
     },
-    { text: "Laporan Shift", icon: <SummarizeIcon />, path: "/reports" },
+    { text: "Laporan Shift", icon: <SummarizeIcon />, path: "/shift-report" },
     { text: "Master Produk", icon: <InventoryIcon />, path: "/inventory" },
     {
       text: "Master Kategori",

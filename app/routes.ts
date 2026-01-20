@@ -11,4 +11,5 @@ export default [
   route("/dashboard", "routes/dashboard.tsx"),
   route("/sales", "routes/sales.tsx"),
   route("/sales/history", "routes/sales-history.tsx"),
+  route("/shift-report", "routes/shift-report.tsx"),
 ] satisfies RouteConfig
