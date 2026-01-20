@@ -24,6 +24,8 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight"
 import SoupKitchenIcon from "@mui/icons-material/SoupKitchen"
 import PaymentsIcon from "@mui/icons-material/Payments"
 import QrCode2Icon from "@mui/icons-material/QrCode2"
+import ShoppingBagIcon from "@mui/icons-material/ShoppingBag"
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline"
 
 interface ProductItem {
   id: string
@@ -39,6 +41,7 @@ interface ProductBasketProps {
   onUpdateQuantity?: (id: string, quantity: number) => void
   onDiscountChange?: (discount: number) => void
   onCheckout?: (discount?: number) => void
+  onClearBasket?: () => void
 }
 
 const ProductBasket: React.FC<ProductBasketProps> = ({
@@ -47,6 +50,12 @@ const ProductBasket: React.FC<ProductBasketProps> = ({
   onUpdateQuantity = () => {},
   onDiscountChange = () => {},
   onCheckout = () => {},
+  onClearBasket = () => {
+    // Jika tidak ada fungsi onClearBasket yang disediakan, hapus semua item satu per satu
+    items.forEach((item) => {
+      onRemoveItem(item.id)
+    })
+  },
 }) => {
   const [discountPercent, setDiscountPercent] = React.useState<number>(0)
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0)
@@ -56,6 +65,10 @@ const ProductBasket: React.FC<ProductBasketProps> = ({
   )
   const discountAmount = totalPrice * (discountPercent / 100)
   const finalPrice = totalPrice - discountAmount
+
+  const handleClearBasket = () => {
+    onClearBasket()
+  }
 
   const handleIncreaseQuantity = (id: string) => {
     const item = items.find((i) => i.id === id)
@@ -83,13 +96,24 @@ const ProductBasket: React.FC<ProductBasketProps> = ({
             <Box display="flex" alignItems="center">
               <ShoppingCartIcon sx={{ mr: 1 }} />
               <Typography variant="h6">Keranjang</Typography>
+              <Chip
+                label={`${totalItems}`}
+                size="small"
+                color="primary"
+                variant="outlined"
+                className="ml-2"
+              />
             </Box>
-            <Chip
-              label={`${totalItems} item`}
-              size="small"
-              color="primary"
-              variant="outlined"
-            />
+            <Box>
+              <IconButton
+                onClick={handleClearBasket}
+                color="error"
+                size="small"
+                title="Hapus Semua"
+              >
+                <DeleteOutlineIcon />
+              </IconButton>
+            </Box>
           </Box>
         }
         sx={{}}
@@ -272,13 +296,17 @@ const ProductBasket: React.FC<ProductBasketProps> = ({
         ) : (
           <Box
             display="flex"
+            flexDirection="column"
             alignItems="center"
             justifyContent="center"
             height="100%"
             p={3}
           >
+            <ShoppingBagIcon
+              sx={{ fontSize: 60, color: "action.active", mb: 2 }}
+            />
             <Typography color="textSecondary" align="center">
-              Keranjang belanja kosong. Tambahkan produk untuk memulai.
+              Keranjang belanja kosong.
             </Typography>
           </Box>
         )}

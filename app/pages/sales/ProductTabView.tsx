@@ -17,10 +17,12 @@ interface Product {
 
 interface ProductTabViewProps {
   productCategories?: ProductCategory[]
+  onAddToBasket?: (product: Product) => void
 }
 
 const ProductTabView: React.FC<ProductTabViewProps> = ({
   productCategories = [],
+  onAddToBasket = () => {},
 }) => {
   const [value, setValue] = useState<string>("all")
   const [viewMode, setViewMode] = useState<"list" | "grid">("grid")
@@ -35,7 +37,10 @@ const ProductTabView: React.FC<ProductTabViewProps> = ({
 
   const handleProductClick = (product: Product) => {
     console.log("Product clicked:", product)
-    // Di sini nanti bisa ditambahkan logika untuk menambahkan produk ke keranjang
+    // Menambahkan produk ke keranjang
+    if (onAddToBasket) {
+      onAddToBasket(product)
+    }
   }
 
   const productLists = [
