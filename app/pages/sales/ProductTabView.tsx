@@ -1,10 +1,18 @@
 import React, { useState } from "react"
-import { Box, Tab, Tabs, Paper, IconButton } from "@mui/material"
+import { Box, Tab, Tabs, Paper, IconButton, Grid } from "@mui/material"
 import GridViewIcon from "@mui/icons-material/GridView"
+import { ProductItem } from "./ProductItem"
 
 interface ProductCategory {
   id: string
   name: string
+}
+
+interface Product {
+  name: string
+  price: string
+  badge: string
+  image?: string
 }
 
 interface ProductTabViewProps {
@@ -25,14 +33,46 @@ const ProductTabView: React.FC<ProductTabViewProps> = ({
     setViewMode(viewMode === "grid" ? "list" : "grid")
   }
 
+  const handleProductClick = (product: Product) => {
+    console.log("Product clicked:", product)
+    // Di sini nanti bisa ditambahkan logika untuk menambahkan produk ke keranjang
+  }
+
+  const productLists = [
+    {
+      name: "Americano",
+      price: "Rp 25.000",
+      badge: "2777",
+      image: "",
+    },
+    {
+      name: "Caffe Latte",
+      price: "Rp 32.000",
+      badge: "500",
+      image: "",
+    },
+    {
+      name: "Kopi Susu Gula Aren",
+      price: "Rp 28.000",
+      badge: "333",
+      image: "",
+    },
+    {
+      name: "Caramel Macchiato",
+      price: "Rp 38.000",
+      badge: "250",
+      image: "",
+    },
+  ]
   // Default categories if none provided
   const categories =
     productCategories.length > 0
       ? productCategories
       : [
-          { id: "popular", name: "Produk Terlaris" },
-          { id: "new", name: "Produk Baru" },
-          { id: "all", name: "Semua Produk" },
+          { id: "all", name: "Semua" },
+
+          { id: "cofee", name: "Coffe" },
+          { id: "non_coffe", name: "Non Coffe" },
         ]
 
   return (
@@ -55,12 +95,19 @@ const ProductTabView: React.FC<ProductTabViewProps> = ({
         </Tabs>
       </Box>
       <Box sx={{ p: 2 }}>
-        {categories.map(
-          (category) =>
-            value === category.id && (
-              <div key={category.id}>{category.name}</div>
-            ),
-        )}
+        <Grid container spacing={2}>
+          {productLists.map((product, index) => (
+            <Box>
+              <ProductItem
+                name={product.name}
+                price={product.price}
+                badge={product.badge}
+                image={product.image}
+                onClick={() => handleProductClick(product)}
+              />
+            </Box>
+          ))}
+        </Grid>
       </Box>
     </Paper>
   )
