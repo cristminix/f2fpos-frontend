@@ -23,6 +23,7 @@ import Paper from "@mui/material/Paper"
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth"
 import ChevronRightIcon from "@mui/icons-material/ChevronRight"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
+import RefreshIcon from "@mui/icons-material/Refresh"
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers"
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
 import dayjs, { Dayjs } from "dayjs"
@@ -224,42 +225,56 @@ const DashboardPage: React.FC = () => {
             <div>Outlet: F2F Mart</div>
           </Box>
           <Box>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                padding: "10px 12px",
-                border: "1px solid #ccc",
-                borderRadius: "4px",
-                cursor: "pointer",
-                backgroundColor: "white",
-                minWidth: "200px",
-              }}
-              onClick={(event) => setAnchorEl(event.currentTarget)}
-            >
-              <CalendarMonthIcon fontSize="small" />
-              <span style={{ flexGrow: 1 }}>
-                {selectedDateRange === "Rentang Tanggal"
-                  ? `${dateRange[0]?.format("DD/MM/YYYY")} - ${dateRange[1]?.format("DD/MM/YYYY")}`
-                  : selectedDateRange}
-              </span>
-              <div
-                style={{
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <Box
+                sx={{
                   display: "flex",
                   alignItems: "center",
+                  gap: "8px",
+                  padding: "10px 12px",
+                  border: "1px solid",
+                  borderColor: "divider",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  backgroundColor: "background.paper",
+                  minWidth: "200px",
                 }}
+                onClick={(event) => setAnchorEl(event.currentTarget)}
               >
-                {Boolean(anchorEl) ? (
-                  <ExpandMoreIcon
-                    fontSize="small"
-                    style={{ transform: "rotate(180deg)" }}
-                  />
-                ) : (
-                  <ExpandMoreIcon fontSize="small" />
-                )}
-              </div>
-            </div>
+                <CalendarMonthIcon fontSize="small" />
+                <Box style={{ flexGrow: 1 }}>
+                  {selectedDateRange === "Rentang Tanggal"
+                    ? `${dateRange[0]?.format("DD/MM/YYYY")} - ${dateRange[1]?.format("DD/MM/YYYY")}`
+                    : selectedDateRange}
+                </Box>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  {Boolean(anchorEl) ? (
+                    <ExpandMoreIcon
+                      fontSize="small"
+                      style={{ transform: "rotate(180deg)" }}
+                    />
+                  ) : (
+                    <ExpandMoreIcon fontSize="small" />
+                  )}
+                </div>
+              </Box>
+
+              <IconButton
+                onClick={() => {
+                  // Fungsi refresh bisa ditambahkan di sini
+                  window.location.reload()
+                }}
+                sx={{ ml: 1 }}
+              >
+                <RefreshIcon />
+              </IconButton>
+            </Box>
+
             <Menu
               anchorEl={anchorEl}
               open={Boolean(anchorEl)}
@@ -283,9 +298,6 @@ const DashboardPage: React.FC = () => {
                   setSelectedDateRange("Rentang Tanggal")
                 }}
               >
-                <ListItemIcon>
-                  <CalendarMonthIcon fontSize="small" />
-                </ListItemIcon>
                 <ListItemText>Rentang Tanggal</ListItemText>
               </MenuItem>
               {showDatePickers && (

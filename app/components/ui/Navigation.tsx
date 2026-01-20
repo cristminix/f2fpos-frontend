@@ -96,8 +96,10 @@ const Navigation = () => {
           display: "flex",
           flexDirection: "column",
           p: 2,
-          backgroundColor: "primary.main",
-          color: "white",
+          // backgroundImage: "url(https://cdn.quasar.dev/img/material.png)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          minHeight: 120,
         }}
       >
         <Box
@@ -115,7 +117,8 @@ const Navigation = () => {
               height: 56,
               borderRadius: "50%",
               mr: 2,
-              border: "2px solid white",
+              border: (theme) =>
+                `2px solid ${theme.palette.primary.contrastText}`,
               objectFit: "cover",
             }}
           />
@@ -131,37 +134,71 @@ const Navigation = () => {
               labelId="outlet-select-label"
               value={selectedOutlet}
               label="Pilih Outlet"
-              sx={{ backgroundColor: "white", minWidth: 120 }}
+              sx={{
+                backgroundColor: "background.paper",
+                minWidth: 120,
+                color: "text.primary",
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "divider",
+                },
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "primary.light",
+                },
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "primary.main",
+                },
+              }}
               onChange={(e) => setSelectedOutlet(e.target.value as string)}
             >
-              <MenuItem value="cafe-senja">Cafe Senja</MenuItem>
-              <MenuItem value="f2f-mart">F2F Mart</MenuItem>
-              <MenuItem value="f2f-laundry">F2F Laundry</MenuItem>
+              <MenuItem value="cafe-senja" sx={{ color: "text.primary" }}>
+                Cafe Senja
+              </MenuItem>
+              <MenuItem value="f2f-mart" sx={{ color: "text.primary" }}>
+                F2F Mart
+              </MenuItem>
+              <MenuItem value="f2f-laundry" sx={{ color: "text.primary" }}>
+                F2F Laundry
+              </MenuItem>
             </Select>
           </FormControl>
         </Box>
       </Box>
-      <Divider />
+      <Divider sx={{ borderColor: "divider" }} />
       <List>
         {menuItems.map((item, index) => (
           <ListItem key={item.text} disablePadding>
             {item.path ? (
-              <ListItemButton component={Link} to={item.path}>
-                <ListItemIcon>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.text} />
+              <ListItemButton
+                component={Link}
+                to={item.path}
+                sx={{ color: "text.primary" }}
+              >
+                <ListItemIcon sx={{ color: "primary.main" }}>
+                  {item.icon}
+                </ListItemIcon>
+                <ListItemText
+                  primary={item.text}
+                  sx={{ color: "text.primary" }}
+                />
               </ListItemButton>
             ) : (
               <ListItemButton
                 onClick={() => (window.location.href = "/logout")}
+                sx={{ color: "text.primary" }}
               >
-                <ListItemIcon>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.text} />
+                <ListItemIcon sx={{ color: "primary.main" }}>
+                  {item.icon}
+                </ListItemIcon>
+                <ListItemText
+                  primary={item.text}
+                  sx={{ color: "text.primary" }}
+                />
               </ListItemButton>
             )}
           </ListItem>
         ))}
       </List>
-      <Divider />
+      <Divider sx={{ borderColor: "divider" }} />
     </Box>
   )
 
