@@ -9,4 +9,5 @@ export default [
   route("/logout", "pages/LogoutPage.tsx"),
   route("/unauthorized", "pages/UnauthorizedPage.tsx"),
   route("/dashboard", "routes/dashboard.tsx"),
+  route("/sales", "routes/sales.tsx"),
 ] satisfies RouteConfig

@@ -96,7 +96,7 @@ const Navigation = () => {
           display: "flex",
           flexDirection: "column",
           p: 2,
-          // backgroundImage: "url(https://cdn.quasar.dev/img/material.png)",
+          /* backgroundImage: "url(https://cdn.quasar.dev/img/material.png)",*/
           backgroundSize: "cover",
           backgroundPosition: "center",
           minHeight: 120,

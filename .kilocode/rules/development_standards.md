@@ -28,6 +28,7 @@ Pastikan semua interaksi kode dan eksekusi terminal mengikuti standar berikut:
 - Always create logic or common function to separate file then use import syntax to use it then save to `app\utils\fn`
 - Always create route component to `app\routes` after creating new page component and dont forget to attach the main router config file `app\routes.ts`
 - Jangan pernah membuat dokumentasi baru tanpa konfirmasi terlebih dahulu
+- Ignore error on import type { Route } from "./+types/<route_path>" this will be resolved after attach route file the main router config file `app\routes.ts`
 
 ## Important
 
