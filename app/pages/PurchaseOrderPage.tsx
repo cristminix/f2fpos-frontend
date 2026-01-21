@@ -76,7 +76,7 @@ const CustomToolbar = () => {
         startIcon={<AddIcon />}
         onClick={handleAddClick}
       >
-        + Tambah PO
+        BUAT PO BARU
       </Button>
     </Box>
   )

@@ -17,4 +17,8 @@ export default [
   route("/master-ingredient", "routes/master-ingredient.tsx"),
   route("/suppliers", "routes/suppliers.tsx"),
   route("/purchase-orders", "routes/purchase-orders.tsx"),
+  route("/stock-adjustment", "routes/stock-adjustment.tsx"),
+  route("/my-outlet", "routes/my-outlet.tsx"),
+  route("/owner-reports", "routes/owner-report.tsx"),
+  route("/staff", "routes/staff.tsx"),
 ] satisfies RouteConfig

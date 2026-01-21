@@ -84,7 +84,7 @@ const Navigation = () => {
     { text: "Penyesuaian Stok", icon: <RuleIcon />, path: "/stock-adjustment" },
     { text: "Outlet Saya", icon: <StoreIcon />, path: "/my-outlet" },
     { text: "Manajemen Staff", icon: <ManageAccountsIcon />, path: "/staff" },
-    { text: "Laporan Owner", icon: <AnalyticsIcon />, path: "/owner/reports" },
+    { text: "Laporan Owner", icon: <AnalyticsIcon />, path: "/owner-reports" },
     { text: "Logout", icon: <LogoutIcon />, path: null },
   ]
 
