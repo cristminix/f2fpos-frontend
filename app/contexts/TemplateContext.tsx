@@ -3,7 +3,7 @@ import type { ReactNode } from "react"
 import PublicTemplate from "~/components/templates/PublicTemplate"
 import ProtectedTemplate from "~/components/templates/ProtectedTemplate"
 import AdminTemplate from "~/components/templates/AdminTemplate"
-
+import SingleTemplate from "~/components/templates/SingleTemplate"
 interface TemplateConfig {
   component: React.ComponentType<any>
   props: Record<string, any>
@@ -19,9 +19,13 @@ interface TemplateContextType {
   setTemplate: (templateName: string) => void
 }
 
-const TemplateContext = createContext<TemplateContextType | undefined>(undefined)
+const TemplateContext = createContext<TemplateContextType | undefined>(
+  undefined,
+)
 
-export const TemplateProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const TemplateProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [currentTemplate, setCurrentTemplate] = useState("public")
 
   const templates: Record<string, TemplateConfig> = {
@@ -39,6 +43,11 @@ export const TemplateProvider: React.FC<{ children: ReactNode }> = ({ children }
       component: AdminTemplate,
       props: { showAdminNav: true },
       title: "Admin Template",
+    },
+    single: {
+      component: SingleTemplate,
+      props: { showAdminNav: false },
+      title: "Single Template",
     },
   }
 
@@ -58,7 +67,11 @@ export const TemplateProvider: React.FC<{ children: ReactNode }> = ({ children }
     templates,
   }
 
-  return <TemplateContext.Provider value={value}>{children}</TemplateContext.Provider>
+  return (
+    <TemplateContext.Provider value={value}>
+      {children}
+    </TemplateContext.Provider>
+  )
 }
 
 export const useTemplate = (): TemplateContextType => {

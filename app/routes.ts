@@ -5,7 +5,7 @@ export default [
   route("/users", "routes/users.tsx"),
   route("/material-grid", "pages/MaterialUIGridPage.tsx"),
   route("/grid-table-form", "pages/GridTableFormPage.tsx"),
-  route("/login", "pages/LoginPage.tsx"),
+  route("/login", "routes/login.tsx"),
   route("/logout", "pages/LogoutPage.tsx"),
   route("/unauthorized", "pages/UnauthorizedPage.tsx"),
   route("/dashboard", "routes/dashboard.tsx"),

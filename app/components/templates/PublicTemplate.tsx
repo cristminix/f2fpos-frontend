@@ -13,7 +13,9 @@ const PublicTemplate: React.FC<{
         </header>
       )}
       <main className="container mx-auto p-4">{children}</main>
-      {showFooter && <footer className="bg-gray-100 p-4 mt-8 border-t">Public Footer</footer>}
+      {showFooter && (
+        <footer className="bg-gray-100 p-4 mt-8 border-t">Public Footer</footer>
+      )}
     </div>
   )
 }

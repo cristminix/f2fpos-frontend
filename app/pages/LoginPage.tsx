@@ -1,10 +1,20 @@
 import React, { useState } from "react"
-import { Box, Button, TextField, Typography, Container, Paper, Grid } from "@mui/material"
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  Container,
+  Paper,
+  Grid,
+} from "@mui/material"
 import { styled } from "@mui/material/styles"
 import { type Theme } from "@mui/material"
-export function meta({}: Route.MetaArgs) {
-  return [{ title: "Login" }, { name: "description", content: "Login" }]
-}
+
+import { useNavigate } from "react-router"
+import { useAuth } from "../contexts/AuthContext"
+import { LoginService } from "~/services/LoginService"
+const loginService = new LoginService()
 const StyledPaper = styled(Paper)(({ theme }: { theme: Theme }) => ({
   padding: theme.spacing(4),
   display: "flex",
@@ -23,10 +33,6 @@ const StyledForm = styled("form")(({ theme }: { theme: Theme }) => ({
 const StyledButton = styled(Button)(({ theme }: { theme: Theme }) => ({
   margin: theme.spacing(3, 0, 2),
 }))
-
-import { useNavigate } from "react-router"
-import { useAuth } from "../contexts/AuthContext"
-import type { Route } from "../+types/root"
 
 const LoginPage: React.FC = () => {
   const { login, isAuthenticated } = useAuth()
@@ -92,19 +98,34 @@ const LoginPage: React.FC = () => {
       return
     }
 
-    // Dummy authentication - in real app, this would be an API call
     if (email && password) {
-      // Create dummy user data
-      const dummyUser = {
-        id: "1",
-        username: email.split("@")[0], // Extract username from email
-        email: email,
-        role: "user",
-        name: email.split("@")[0],
-      }
+      // // Create dummy user data
+      // const dummyUser = {
+      //   id: "1",
+      //   username: email.split("@")[0], // Extract username from email
+      //   email: email,
+      //   role: "user",
+      //   name: email.split("@")[0],
+      // }
 
-      // Save user data to localStorage via AuthContext
-      login(dummyUser)
+      // // Save user data to localStorage via AuthContext
+      // login(dummyUser)
+      const result = await loginService.login(email, password)
+      console.log({ result })
+      const { success, message, user, roles } = result
+      if (!success) {
+        setError(message)
+      } else {
+        for (const role of roles) {
+          if (role.includes("group:")) {
+            const roleName = role.replace("group:", "")
+            console.log(roleName)
+            user.role = roleName
+          }
+        }
+        login(user)
+      }
+      setIsSubmitting(false)
 
       // The navigation will be handled by the useEffect above
     } else {
@@ -122,14 +143,49 @@ const LoginPage: React.FC = () => {
         <StyledForm onSubmit={handleSubmit} noValidate>
           <Grid container spacing={2}>
             <Grid size={12}>
-              <TextField margin="normal" required fullWidth id="email" label="Email" name="email" autoComplete="email" autoFocus error={!!emailError} helperText={emailError} />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email"
+                name="email"
+                autoComplete="email"
+                autoFocus
+                error={!!emailError}
+                helperText={emailError}
+              />
             </Grid>
 
             <Grid size={12}>
-              <TextField margin="normal" required fullWidth name="password" label="Password" type="password" id="password" autoComplete="current-password" error={!!passwordError} helperText={passwordError} />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                error={!!passwordError}
+                helperText={passwordError}
+              />
             </Grid>
           </Grid>
-          <StyledButton type="submit" fullWidth variant="contained" color="primary" disabled={isSubmitting}>
+          {error && (
+            <Box mt={2} mb={2}>
+              <Typography color="error" align="center">
+                {error}
+              </Typography>
+            </Box>
+          )}
+          <StyledButton
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            disabled={isSubmitting}
+          >
             {isSubmitting ? "Logging In..." : "Login"}
           </StyledButton>
           <Grid container>

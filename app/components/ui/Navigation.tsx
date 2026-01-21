@@ -34,10 +34,12 @@ import StoreIcon from "@mui/icons-material/Store"
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts"
 import AnalyticsIcon from "@mui/icons-material/Analytics"
 import LogoutIcon from "@mui/icons-material/Logout"
+import { LoginService } from "~/services/LoginService"
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [selectedOutlet, setSelectedOutlet] = useState("")
-
+  const loginService = new LoginService()
+  const currentUser = loginService.getCurrentUser()
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
       if (
@@ -127,8 +129,10 @@ const Navigation = () => {
             }}
           />
           <Box sx={{ flex: 1 }}>
-            <Box sx={{ fontWeight: "bold" }}>Lisa</Box>
-            <Box sx={{ fontSize: "small", opacity: 0.8 }}>Protected</Box>
+            <Box sx={{ fontWeight: "bold" }}>{currentUser.username}</Box>
+            <Box sx={{ fontSize: "small", opacity: 0.8 }}>
+              {currentUser.role}
+            </Box>
           </Box>
         </Box>
         <Box sx={{ pt: 2, mt: 1 }} onClick={(e) => e.stopPropagation()}>
