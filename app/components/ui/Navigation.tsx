@@ -74,12 +74,12 @@ const Navigation = () => {
     {
       text: "Supplier",
       icon: <LocalShippingIcon />,
-      path: "/procurement/suppliers",
+      path: "/suppliers",
     },
     {
       text: "Purchase Order",
       icon: <ReceiptLongIcon />,
-      path: "/procurement/orders",
+      path: "/purchase-orders",
     },
     { text: "Penyesuaian Stok", icon: <RuleIcon />, path: "/stock-adjustment" },
     { text: "Outlet Saya", icon: <StoreIcon />, path: "/my-outlet" },

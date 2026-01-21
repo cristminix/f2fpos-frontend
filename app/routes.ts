@@ -15,4 +15,5 @@ export default [
   route("/master-product", "routes/master-product.tsx"),
   route("/product-category", "routes/product-category.tsx"),
   route("/master-ingredient", "routes/master-ingredient.tsx"),
+  route("/suppliers", "routes/suppliers.tsx"),
 ] satisfies RouteConfig
