@@ -189,6 +189,13 @@ const LoginPage: React.FC = () => {
             {isSubmitting ? "Logging In..." : "Login"}
           </StyledButton>
           <Grid container>
+            <div>
+              <code>
+                demo@example.com
+                <br />
+                password
+              </code>
+            </div>
             {/* <Grid size={12}>
               <Link href="#" variant="body2">
                 Forgot password?
