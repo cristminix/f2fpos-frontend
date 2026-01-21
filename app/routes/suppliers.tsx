@@ -1,6 +1,6 @@
 import type { Route } from "./+types/suppliers"
 import ProtectedLayout from "../components/layouts/ProtectedLayout"
-import { Supplier } from "../pages/Supplier"
+import { SupplierPage } from "../pages/SupplierPage"
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -12,7 +12,7 @@ export function meta({}: Route.MetaArgs) {
 export default function SupplierRoute() {
   return (
     <ProtectedLayout>
-      <Supplier />
+      <SupplierPage />
     </ProtectedLayout>
   )
 }

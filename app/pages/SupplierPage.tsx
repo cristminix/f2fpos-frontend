@@ -13,7 +13,7 @@ interface SupplierData {
   telepon: string
 }
 
-export function Supplier() {
+export function SupplierPage() {
   const theme = useTheme()
 
   // Data contoh

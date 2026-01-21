@@ -18,7 +18,7 @@ interface ProductCategoryData {
   nama: string
 }
 
-const ProductCategory: React.FC = () => {
+const ProductCategoryPage: React.FC = () => {
   const theme = useTheme()
 
   // Data contoh
@@ -161,4 +161,4 @@ const ProductCategory: React.FC = () => {
   )
 }
 
-export { ProductCategory }
+export { ProductCategoryPage }

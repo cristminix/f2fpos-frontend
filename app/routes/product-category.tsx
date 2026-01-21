@@ -1,6 +1,6 @@
 import type { Route } from "./+types/product-category"
 import ProtectedLayout from "../components/layouts/ProtectedLayout"
-import { ProductCategory } from "../pages/ProductCategory"
+import { ProductCategoryPage } from "../pages/ProductCategoryPage"
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -12,7 +12,7 @@ export function meta({}: Route.MetaArgs) {
 export default function ProductCategoryRoute() {
   return (
     <ProtectedLayout>
-      <ProductCategory />
+      <ProductCategoryPage />
     </ProtectedLayout>
   )
 }
