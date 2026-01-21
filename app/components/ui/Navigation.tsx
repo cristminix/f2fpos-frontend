@@ -66,7 +66,11 @@ const Navigation = () => {
       icon: <CategoryIcon />,
       path: "/product-category",
     },
-    { text: "Master Bahan Baku", icon: <ScienceIcon />, path: "/ingredients" },
+    {
+      text: "Master Bahan Baku",
+      icon: <ScienceIcon />,
+      path: "/master-ingredient",
+    },
     {
       text: "Supplier",
       icon: <LocalShippingIcon />,

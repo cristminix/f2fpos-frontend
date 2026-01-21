@@ -14,4 +14,5 @@ export default [
   route("/shift-report", "routes/shift-report.tsx"),
   route("/master-product", "routes/master-product.tsx"),
   route("/product-category", "routes/product-category.tsx"),
+  route("/master-ingredient", "routes/master-ingredient.tsx"),
 ] satisfies RouteConfig
