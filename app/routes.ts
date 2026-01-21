@@ -13,4 +13,5 @@ export default [
   route("/sales/history", "routes/sales-history.tsx"),
   route("/shift-report", "routes/shift-report.tsx"),
   route("/master-product", "routes/master-product.tsx"),
+  route("/product-category", "routes/product-category.tsx"),
 ] satisfies RouteConfig

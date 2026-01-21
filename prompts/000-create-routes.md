@@ -30,3 +30,4 @@ If `NEED_AUTH` is true, implement appropriate authentication checks.
 - Updated `app/routes.ts` with the new route definition
 - Updated navigation if required
 - Properly typed and styled component following project standards
+- Dont forget to add meta to route file

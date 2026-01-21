@@ -64,7 +64,7 @@ const Navigation = () => {
     {
       text: "Master Kategori",
       icon: <CategoryIcon />,
-      path: "/inventory/categories",
+      path: "/product-category",
     },
     { text: "Master Bahan Baku", icon: <ScienceIcon />, path: "/ingredients" },
     {
