@@ -26,8 +26,7 @@ export class BaseApiService {
         // Decode payload (bagian tengah dari JWT)
         const payload = parts[1]
         // Tambahkan padding jika diperlukan
-        const paddedPayload =
-          payload + "=".repeat((4 - (payload.length % 4)) % 4)
+        const paddedPayload = payload + "=".repeat((4 - (payload.length % 4)) % 4)
         const decodedPayload = atob(paddedPayload)
         return JSON.parse(decodedPayload)
       } catch (error) {
@@ -55,8 +54,7 @@ export class BaseApiService {
     if (!isExpired()) {
       return accessToken
     } else {
-      const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
-        await this.updateAcessToken()
+      const { accessToken: newAccessToken, refreshToken: newRefreshToken } = await this.updateAcessToken()
       accessToken = newAccessToken as string
       localStorage.setItem("accessToken", accessToken)
       localStorage.setItem("refreshToken", newRefreshToken)
@@ -78,8 +76,7 @@ export class BaseApiService {
           "Content-Type": "application/json",
         },
       })
-      const { accessToken, refreshToken: newRefreshToken } =
-        await response.json()
+      const { accessToken, refreshToken: newRefreshToken } = await response.json()
       return { accessToken, refreshToken: newRefreshToken }
       console.log({ accessToken, refreshToken })
     } catch (error) {}
@@ -111,14 +108,11 @@ export class BaseApiService {
     })
   }
   async post(servicePath: string, payload: any) {
-    const endPoint = `${this.apiBaseUrl}/${this.path}/${servicePath}`
+    const endPoint = `${this.apiBaseUrl}/${this.path}${servicePath.length > 0 ? "/" + servicePath : ""}`
+
     return await this.fetch(endPoint, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer token ${this.getAccessToken()}`,
-        "Content-Type": "application/json",
-        body: JSON.stringify(payload),
-      },
+      method: "POST",
+      body: JSON.stringify(payload),
     })
   }
   async put(servicePath: string, payload: any) {
