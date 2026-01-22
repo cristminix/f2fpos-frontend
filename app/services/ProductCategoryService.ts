@@ -3,5 +3,7 @@ import { BaseApiService } from "./ApiService"
 export class ProductCategoryService extends BaseApiService {
   path = "ProductCategoryService"
 
-  getList() {}
+  async getList() {
+    return await this.get()
+  }
 }

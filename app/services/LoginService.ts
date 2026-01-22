@@ -26,6 +26,8 @@ export class LoginService extends BaseApiService {
         outlets,
       } = await response.json()
       console.log({ accessToken, refreshToken })
+      localStorage.setItem("accessToken", accessToken)
+      localStorage.setItem("refreshToken", refreshToken)
       return { success, message, user, roles, outlets }
     } catch (error) {}
     return { success: false, message: "" }
@@ -40,6 +42,7 @@ export class LoginService extends BaseApiService {
     }
     return user
   }
+
   async setCurrentUser(user: any) {}
   async updateCurrentUserInfo() {}
 

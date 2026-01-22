@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import {
   Box,
   Typography,
@@ -12,26 +12,33 @@ import { DataGrid, type GridColDef, GridToolbar } from "@mui/x-data-grid"
 // Icons
 import EditIcon from "@mui/icons-material/Edit"
 import DeleteIcon from "@mui/icons-material/Delete"
+import { ProductCategoryService } from "~/services/ProductCategoryService"
 
 interface ProductCategoryData {
   id: number
-  nama: string
+  outletId: number
+  name: string
+  timestamp: string
+}
+
+interface ApiResponse {
+  limit: number
+  totalPages: number
+  totalRecords: number
+  recordCount: number
+  records: ProductCategoryData[]
 }
 
 const ProductCategoryPage: React.FC = () => {
   const theme = useTheme()
-
-  // Data contoh
-  const [data] = useState<ProductCategoryData[]>([
-    { id: 1, nama: "Minuman" },
-    { id: 2, nama: "Makanan Ringan" },
-    { id: 3, nama: "ATK" },
-  ])
+  const service = new ProductCategoryService()
+  // Data from API
+  const [data, setData] = useState<ProductCategoryData[]>([])
 
   // Definisi kolom
   const columns: GridColDef[] = [
     {
-      field: "nama",
+      field: "name",
       headerName: "Nama Kategori",
       flex: 1,
       renderHeader: (params) => (
@@ -83,6 +90,15 @@ const ProductCategoryPage: React.FC = () => {
     },
   ]
 
+  async function loadGridData() {
+    const response: ApiResponse = await service.getList()
+    console.log({ response })
+
+    setData(response.records)
+  }
+  useEffect(() => {
+    loadGridData()
+  }, [])
   return (
     <Box className="p-4">
       <Box
@@ -134,7 +150,7 @@ const ProductCategoryPage: React.FC = () => {
               paginationModel: { page: 0, pageSize: 5 },
             },
             sorting: {
-              sortModel: [{ field: "nama", sort: "asc" }],
+              sortModel: [{ field: "name", sort: "asc" }],
             },
           }}
           slots={{
