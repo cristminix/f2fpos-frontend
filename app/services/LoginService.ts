@@ -16,10 +16,17 @@ export class LoginService extends BaseApiService {
           password,
         }),
       })
-      const { success, message, accessToken, refreshToken, user, roles } =
-        await response.json()
+      const {
+        success,
+        message,
+        accessToken,
+        refreshToken,
+        user,
+        roles,
+        outlets,
+      } = await response.json()
       console.log({ accessToken, refreshToken })
-      return { success, message, user, roles }
+      return { success, message, user, roles, outlets }
     } catch (error) {}
     return { success: false, message: "" }
   }
@@ -33,7 +40,7 @@ export class LoginService extends BaseApiService {
     }
     return user
   }
-  async setCurrentUserLogin(user: any) {}
+  async setCurrentUser(user: any) {}
   async updateCurrentUserInfo() {}
 
   async getCurrentUserInfo() {}

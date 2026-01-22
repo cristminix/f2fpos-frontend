@@ -112,10 +112,12 @@ const LoginPage: React.FC = () => {
       // login(dummyUser)
       const result = await loginService.login(email, password)
       console.log({ result })
-      const { success, message, user, roles } = result
+      const { success, message, user, roles, outlets } = result
       if (!success) {
         setError(message)
       } else {
+        user.outlets = outlets
+        user.activeOutlet = outlets[0]
         for (const role of roles) {
           if (role.includes("group:")) {
             const roleName = role.replace("group:", "")

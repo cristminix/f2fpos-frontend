@@ -1,11 +1,13 @@
 import React, { createContext, useContext, useState, useEffect } from "react"
 import type { ReactNode } from "react"
 
-interface User {
+export interface User {
   id: string
   username: string
   email: string
   role: string
+  activeOutlet: any
+  outlets: any[]
   [key: string]: any
 }
 

@@ -35,9 +35,13 @@ import ManageAccountsIcon from "@mui/icons-material/ManageAccounts"
 import AnalyticsIcon from "@mui/icons-material/Analytics"
 import LogoutIcon from "@mui/icons-material/Logout"
 import { LoginService } from "~/services/LoginService"
+import { useAuth, type User } from "~/contexts/AuthContext"
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const [selectedOutlet, setSelectedOutlet] = useState("")
+  const { user } = useAuth()
+  const { activeOutlet, outlets } = user as User
+  console.log({ activeOutlet, outlets })
+  const [selectedOutlet, setSelectedOutlet] = useState(activeOutlet.id)
   const loginService = new LoginService()
   const currentUser = loginService.getCurrentUser()
   const toggleDrawer =
@@ -116,7 +120,7 @@ const Navigation = () => {
         >
           <Box
             component="img"
-            src="https://i.pinimg.com/736x/c0/5b/a5/c05ba59a93d4e7ca51cafd2575a21b84.jpg"
+            src={currentUser.avatar}
             alt="Avatar"
             sx={{
               width: 56,
@@ -129,7 +133,9 @@ const Navigation = () => {
             }}
           />
           <Box sx={{ flex: 1 }}>
-            <Box sx={{ fontWeight: "bold" }}>{currentUser.username}</Box>
+            <Box sx={{ fontWeight: "bold" }}>
+              {currentUser.displayName ?? currentUser.username}
+            </Box>
             <Box sx={{ fontSize: "small", opacity: 0.8 }}>
               {currentUser.role}
             </Box>
@@ -158,15 +164,15 @@ const Navigation = () => {
               }}
               onChange={(e) => setSelectedOutlet(e.target.value as string)}
             >
-              <MenuItem value="cafe-senja" sx={{ color: "text.primary" }}>
-                Cafe Senja
-              </MenuItem>
-              <MenuItem value="f2f-mart" sx={{ color: "text.primary" }}>
-                F2F Mart
-              </MenuItem>
-              <MenuItem value="f2f-laundry" sx={{ color: "text.primary" }}>
-                F2F Laundry
-              </MenuItem>
+              {outlets.map((outlet, key) => (
+                <MenuItem
+                  key={key}
+                  value={outlet.id}
+                  sx={{ color: "text.primary" }}
+                >
+                  {outlet.name}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Box>
