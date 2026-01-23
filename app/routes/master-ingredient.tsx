@@ -1,12 +1,12 @@
-import type { Route } from "./+types/master-ingredient"
-import ProtectedLayout from "../components/layouts/ProtectedLayout"
-import { MasterIngredient } from "../pages/MasterIngredient"
+import type { Route } from "./+types/master-ingredient";
+import ProtectedLayout from "../components/layouts/ProtectedLayout";
+import { MasterIngredient } from "../pages/MasterIngredient";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Master Ingredient Management" },
-    { name: "description", content: "Manage ingredients" },
-  ]
+    { title: "Master Bahan Baku" },
+    { name: "description", content: "Master Bahan Baku" },
+  ];
 }
 
 export default function MasterIngredientRoute() {
@@ -14,5 +14,5 @@ export default function MasterIngredientRoute() {
     <ProtectedLayout>
       <MasterIngredient />
     </ProtectedLayout>
-  )
+  );
 }

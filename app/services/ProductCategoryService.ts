@@ -13,7 +13,9 @@ export class ProductCategoryService extends BaseApiService {
     sortField: string,
     sortOrder: string,
   ) {
-    return await this.get("", { page, limit, sortField, sortOrder });
+    const outletId = this.getCurrentOutletId();
+
+    return await this.get("", { page, limit, sortField, sortOrder, outletId });
   }
 
   async remove(id: string) {

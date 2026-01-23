@@ -1,15 +1,16 @@
 import { BaseApiService } from "./ApiService";
 
 export class MasterIngredientService extends BaseApiService {
-  path = "MasterIngredient";
+  path = "IngredientService";
 
   async create(data: {
-    nama: string;
-    kode: string;
-    stokSaatIni: number;
-    stokMinimum: number;
-    satuanDasar: string;
-    satuanLain?: string
+    outletId: number;
+    name: string;
+    code: string;
+    qty: number;
+    minQty: number;
+    unit: string;
+    alternateUnit?: string;
   }) {
     return await this.post("", data);
   }
@@ -20,21 +21,26 @@ export class MasterIngredientService extends BaseApiService {
     sortField: string,
     sortOrder: string,
   ) {
-    return await this.get("", { page, limit, sortField, sortOrder });
+    const outletId = this.getCurrentOutletId();
+    return await this.get("", { page, limit, sortField, sortOrder, outletId });
   }
 
   async remove(id: string) {
     return await this.delete(id);
   }
 
-  async update(id: string, data: {
-    nama: string;
-    kode: string;
-    stokSaatIni: number;
-    stokMinimum: number;
-    satuanDasar: string;
-    satuanLain?: string
-  }) {
+  async update(
+    id: string,
+    data: {
+      outletId: number;
+      name: string;
+      code: string;
+      qty: number;
+      minQty: number;
+      unit: string;
+      alternateUnit?: string;
+    },
+  ) {
     return await this.put(id, data);
   }
 }

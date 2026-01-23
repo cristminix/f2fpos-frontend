@@ -15,15 +15,17 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { MasterIngredientService } from "~/services/MasterIngredientService";
 import DeleteConfirmationDialog from "./DeleteConfirmationDialog";
 import { EditMasterIngredientDialog } from "./EditMasterIngredientDialog";
+import { useOutlet } from "~/contexts/OutletContext";
 
 interface IngredientData {
   id: number;
-  nama: string;
-  kode: string;
-  stokSaatIni: number;
-  stokMinimum: number;
-  satuanDasar: string;
-  satuanLain?: string;
+  outletId: number;
+  name: string;
+  code: string;
+  qty: number;
+  minQty: number;
+  unit: string;
+  alternateUnit?: string;
 }
 
 interface ApiResponse {
@@ -57,23 +59,20 @@ const MasterIngredientGrid: React.ForwardRefRenderFunction<
     pageSize: 5,
   });
   const [sortModel, setSortModel] = useState([
-    { field: "nama", sort: "asc" as const },
+    { field: "name", sort: "asc" as const },
   ]);
   // State for delete confirmation dialog
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [selectedRow, setSelectedRow] = useState<IngredientData | null>(
-    null,
-  );
+  const [selectedRow, setSelectedRow] = useState<IngredientData | null>(null);
   // State for edit dialog
   const [openEditDialog, setOpenEditDialog] = useState(false);
-  const [editingRow, setEditingRow] = useState<IngredientData | null>(
-    null,
-  );
+  const [editingRow, setEditingRow] = useState<IngredientData | null>(null);
+  const { selectedOutlet } = useOutlet();
 
   // Column definitions
   const columns: GridColDef[] = [
     {
-      field: "nama",
+      field: "name",
       headerName: "Nama Bahan Baku",
       flex: 2,
       renderHeader: (params) => (
@@ -90,7 +89,7 @@ const MasterIngredientGrid: React.ForwardRefRenderFunction<
       cellClassName: "MuiDataGrid-cell--textPrimary",
     },
     {
-      field: "kode",
+      field: "code",
       headerName: "Kode/SKU",
       flex: 1,
       renderHeader: (params) => (
@@ -100,7 +99,7 @@ const MasterIngredientGrid: React.ForwardRefRenderFunction<
       ),
     },
     {
-      field: "stokSaatIni",
+      field: "qty",
       headerName: "Stok Saat Ini",
       flex: 1,
       type: "number",
@@ -111,7 +110,7 @@ const MasterIngredientGrid: React.ForwardRefRenderFunction<
       ),
     },
     {
-      field: "stokMinimum",
+      field: "minQty",
       headerName: "Stok Minimum",
       flex: 1,
       type: "number",
@@ -122,7 +121,7 @@ const MasterIngredientGrid: React.ForwardRefRenderFunction<
       ),
     },
     {
-      field: "satuanDasar",
+      field: "unit",
       headerName: "Satuan Dasar",
       flex: 1,
       renderHeader: (params) => (
@@ -132,7 +131,7 @@ const MasterIngredientGrid: React.ForwardRefRenderFunction<
       ),
     },
     {
-      field: "satuanLain",
+      field: "alternateUnit",
       headerName: "Satuan Beli Lain",
       flex: 1,
       renderHeader: (params) => (
@@ -181,9 +180,11 @@ const MasterIngredientGrid: React.ForwardRefRenderFunction<
     setLoading(true);
     try {
       // Determine sort field and order
-      const sortField = sortModel[0]?.field || "nama";
+      const sortField = sortModel[0]?.field || "name";
       const sortOrder = sortModel[0]?.sort || "asc";
 
+      // Get the current service instance and temporarily set the outlet ID
+      // We'll create a temporary service instance with the selected outlet
       const response: ApiResponse = await service.getList(
         paginationModel.page + 1, // Convert to 1-based index
         paginationModel.pageSize,
@@ -256,6 +257,11 @@ const MasterIngredientGrid: React.ForwardRefRenderFunction<
     loadGridData();
   }, [paginationModel, sortModel]);
 
+  // Trigger loadGridData when outlet changes
+  useEffect(() => {
+    loadGridData();
+  }, [selectedOutlet]);
+
   // Expose the loadGridData function to parent components
   React.useImperativeHandle(ref, () => ({
     loadGridData,
@@ -320,7 +326,7 @@ const MasterIngredientGrid: React.ForwardRefRenderFunction<
         open={openDeleteDialog}
         onClose={handleCloseDeleteDialog}
         onConfirm={handleConfirmDelete}
-        itemName={selectedRow?.nama}
+        itemName={selectedRow?.name}
       />
       <EditMasterIngredientDialog
         open={openEditDialog}

@@ -15,6 +15,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { ProductCategoryService } from "~/services/ProductCategoryService";
 import DeleteConfirmationDialog from "./DeleteConfirmationDialog";
 import { EditProductCategoryDialog } from "./EditProductCategoryDialog";
+import { useOutlet } from "~/contexts/OutletContext";
 
 interface ProductCategoryData {
   id: number;
@@ -72,6 +73,7 @@ const ProductCategoryGrid: React.ForwardRefRenderFunction<
   const [editingRow, setEditingRow] = useState<ProductCategoryData | null>(
     null,
   );
+  const { selectedOutlet } = useOutlet();
 
   // Definisi kolom
   const columns: GridColDef[] = [
@@ -206,7 +208,10 @@ const ProductCategoryGrid: React.ForwardRefRenderFunction<
   useEffect(() => {
     loadGridData();
   }, [paginationModel, sortModel]);
-
+  // Trigger loadGridData when outlet changes
+  useEffect(() => {
+    loadGridData();
+  }, [selectedOutlet]);
   // Expose the loadGridData function to parent components
   React.useImperativeHandle(ref, () => ({
     loadGridData,

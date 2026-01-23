@@ -13,6 +13,20 @@ export class BaseApiService {
   setApiBaseUrl(url: string) {
     this.apiBaseUrl = url;
   }
+  getCurrentOutletId() {
+    try {
+      //@ts-ignore
+      const currentUserData = JSON.parse(localStorage.getItem("user"));
+      // console.log({ currentUserData });
+      //@ts-ignore
+      const { activeOutlet } = currentUserData;
+      if (activeOutlet) {
+        return activeOutlet.id;
+      }
+    } catch (e) {}
+
+    return null;
+  }
   async getAccessToken() {
     let accessToken = localStorage.getItem("accessToken");
 
@@ -81,7 +95,7 @@ export class BaseApiService {
       const { accessToken, refreshToken: newRefreshToken } =
         await response.json();
       return { accessToken, refreshToken: newRefreshToken };
-      console.log({ accessToken, refreshToken });
+      // console.log({ accessToken, refreshToken });
     } catch (error) {}
     return {};
   }
@@ -100,6 +114,7 @@ export class BaseApiService {
       response = await fetch(url, fetchOptions);
       return await response.json();
     } catch (error) {
+      // console.log("HERE");
       return response;
     }
   }

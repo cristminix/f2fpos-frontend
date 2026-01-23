@@ -16,12 +16,13 @@ import {
 
 interface IngredientData {
   id: number;
-  nama: string;
-  kode: string;
-  stokSaatIni: number;
-  stokMinimum: number;
-  satuanDasar: string;
-  satuanLain?: string;
+  outletId: number;
+  name: string;
+  code: string;
+  qty: number;
+  minQty: number;
+  unit: string;
+  alternateUnit?: string;
 }
 
 interface EditMasterIngredientDialogProps {
@@ -31,19 +32,17 @@ interface EditMasterIngredientDialogProps {
   ingredientData: IngredientData | null;
 }
 
-export const EditMasterIngredientDialog: React.FC<EditMasterIngredientDialogProps> = ({
-  open,
-  onClose,
-  onUpdateSuccess,
-  ingredientData,
-}) => {
+export const EditMasterIngredientDialog: React.FC<
+  EditMasterIngredientDialogProps
+> = ({ open, onClose, onUpdateSuccess, ingredientData }) => {
   const [formData, setFormData] = useState<Partial<IngredientData>>({
-    nama: "",
-    kode: "",
-    stokSaatIni: 0,
-    stokMinimum: 0,
-    satuanDasar: "",
-    satuanLain: "",
+    outletId: 0,
+    name: "",
+    code: "",
+    qty: 0,
+    minQty: 0,
+    unit: "",
+    alternateUnit: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -51,21 +50,23 @@ export const EditMasterIngredientDialog: React.FC<EditMasterIngredientDialogProp
     if (ingredientData) {
       setFormData({
         id: ingredientData.id,
-        nama: ingredientData.nama,
-        kode: ingredientData.kode,
-        stokSaatIni: ingredientData.stokSaatIni,
-        stokMinimum: ingredientData.stokMinimum,
-        satuanDasar: ingredientData.satuanDasar,
-        satuanLain: ingredientData.satuanLain || "",
+        outletId: ingredientData.outletId,
+        name: ingredientData.name,
+        code: ingredientData.code,
+        qty: ingredientData.qty,
+        minQty: ingredientData.minQty,
+        unit: ingredientData.unit,
+        alternateUnit: ingredientData.alternateUnit || "",
       });
     } else {
       setFormData({
-        nama: "",
-        kode: "",
-        stokSaatIni: 0,
-        stokMinimum: 0,
-        satuanDasar: "",
-        satuanLain: "",
+        outletId: 0,
+        name: "",
+        code: "",
+        qty: 0,
+        minQty: 0,
+        unit: "",
+        alternateUnit: "",
       });
     }
   }, [ingredientData]);
@@ -74,7 +75,7 @@ export const EditMasterIngredientDialog: React.FC<EditMasterIngredientDialogProp
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: name.includes('stok') ? Number(value) : value,
+      [name]: name === "qty" || name === "minQty" ? Number(value) : value,
     });
 
     // Clear error when user starts typing
@@ -89,24 +90,24 @@ export const EditMasterIngredientDialog: React.FC<EditMasterIngredientDialogProp
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.nama?.trim()) {
-      newErrors.nama = "Nama bahan baku wajib diisi";
+    if (!formData.name?.trim()) {
+      newErrors.name = "Nama bahan baku wajib diisi";
     }
 
-    if (!formData.kode?.trim()) {
-      newErrors.kode = "Kode bahan baku wajib diisi";
+    if (!formData.code?.trim()) {
+      newErrors.code = "Kode bahan baku wajib diisi";
     }
 
-    if (formData.stokSaatIni === undefined || formData.stokSaatIni < 0) {
-      newErrors.stokSaatIni = "Stok saat ini harus berupa angka positif";
+    if (formData.qty === undefined || formData.qty < 0) {
+      newErrors.qty = "Stok saat ini harus berupa angka positif";
     }
 
-    if (formData.stokMinimum === undefined || formData.stokMinimum < 0) {
-      newErrors.stokMinimum = "Stok minimum harus berupa angka positif";
+    if (formData.minQty === undefined || formData.minQty < 0) {
+      newErrors.minQty = "Stok minimum harus berupa angka positif";
     }
 
-    if (!formData.satuanDasar?.trim()) {
-      newErrors.satuanDasar = "Satuan dasar wajib diisi";
+    if (!formData.unit?.trim()) {
+      newErrors.unit = "Satuan dasar wajib diisi";
     }
 
     setErrors(newErrors);
@@ -134,80 +135,80 @@ export const EditMasterIngredientDialog: React.FC<EditMasterIngredientDialogProp
           <TextField
             autoFocus
             margin="dense"
-            name="nama"
+            name="name"
             label="Nama Bahan Baku"
             type="text"
             fullWidth
             variant="outlined"
-            value={formData.nama || ""}
+            value={formData.name || ""}
             onChange={handleChange}
-            error={!!errors.nama}
-            helperText={errors.nama}
+            error={!!errors.name}
+            helperText={errors.name}
           />
         </Box>
         <Box mt={2} mb={2}>
           <TextField
             margin="dense"
-            name="kode"
+            name="code"
             label="Kode/SKU"
             type="text"
             fullWidth
             variant="outlined"
-            value={formData.kode || ""}
+            value={formData.code || ""}
             onChange={handleChange}
-            error={!!errors.kode}
-            helperText={errors.kode}
+            error={!!errors.code}
+            helperText={errors.code}
           />
         </Box>
         <Box display="flex" gap={2}>
           <Box flex={1}>
             <TextField
               margin="dense"
-              name="stokSaatIni"
+              name="qty"
               label="Stok Saat Ini"
               type="number"
               fullWidth
               variant="outlined"
-              value={formData.stokSaatIni || 0}
+              value={formData.qty || 0}
               onChange={handleChange}
-              error={!!errors.stokSaatIni}
-              helperText={errors.stokSaatIni}
+              error={!!errors.qty}
+              helperText={errors.qty}
             />
           </Box>
           <Box flex={1}>
             <TextField
               margin="dense"
-              name="stokMinimum"
+              name="minQty"
               label="Stok Minimum"
               type="number"
               fullWidth
               variant="outlined"
-              value={formData.stokMinimum || 0}
+              value={formData.minQty || 0}
               onChange={handleChange}
-              error={!!errors.stokMinimum}
-              helperText={errors.stokMinimum}
+              error={!!errors.minQty}
+              helperText={errors.minQty}
             />
           </Box>
         </Box>
         <Box display="flex" gap={2}>
           <Box flex={1}>
-            <FormControl fullWidth margin="dense" error={!!errors.satuanDasar}>
+            <FormControl fullWidth margin="dense" error={!!errors.unit}>
               <InputLabel>Satuan Dasar</InputLabel>
               <Select
-                name="satuanDasar"
-                value={formData.satuanDasar || ""}
+                name="unit"
+                value={formData.unit || ""}
                 label="Satuan Dasar"
                 onChange={(e) => {
                   setFormData({
                     ...formData,
-                    satuanDasar: e.target.value,
+                    unit: e.target.value,
                   });
 
                   // Clear error when user selects a value
-                  if (errors.satuanDasar) {
+                  if (errors.unit) {
                     setErrors({
                       ...errors,
-                      satuanDasar: "",
+                      unit: "",
                     });
                   }
                 }}
@@ -219,20 +220,18 @@ export const EditMasterIngredientDialog: React.FC<EditMasterIngredientDialogProp
                 <MenuItem value="Buah">Buah</MenuItem>
                 <MenuItem value="Pack">Pack</MenuItem>
               </Select>
-              {errors.satuanDasar && (
-                <FormHelperText>{errors.satuanDasar}</FormHelperText>
-              )}
+              {errors.unit && <FormHelperText>{errors.unit}</FormHelperText>}
             </FormControl>
           </Box>
           <Box flex={1}>
             <TextField
               margin="dense"
-              name="satuanLain"
+              name="alternateUnit"
               label="Satuan Beli Lain"
               type="text"
               fullWidth
               variant="outlined"
-              value={formData.satuanLain || ""}
+              value={formData.alternateUnit || ""}
               onChange={handleChange}
             />
           </Box>

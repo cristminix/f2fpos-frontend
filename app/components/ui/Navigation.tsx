@@ -16,10 +16,6 @@ import {
   InputLabel,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import HomeIcon from "@mui/icons-material/Home";
-import PeopleIcon from "@mui/icons-material/People";
-import GridOnIcon from "@mui/icons-material/GridOn";
-import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import HistoryIcon from "@mui/icons-material/History";
@@ -36,12 +32,13 @@ import AnalyticsIcon from "@mui/icons-material/Analytics";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { LoginService } from "~/services/LoginService";
 import { useAuth, type User } from "~/contexts/AuthContext";
+import { useOutlet } from "~/contexts/OutletContext";
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user } = useAuth();
   const { activeOutlet, outlets } = user as User;
   // console.log({ activeOutlet, outlets })
-  const [selectedOutlet, setSelectedOutlet] = useState(activeOutlet.id);
+  const { selectedOutlet, setSelectedOutlet } = useOutlet();
   const loginService = new LoginService();
   const currentUser = loginService.getCurrentUser();
   const toggleDrawer =
