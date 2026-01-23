@@ -52,6 +52,16 @@ const ProductCategoryGrid: React.ForwardRefRenderFunction<
   const service = new ProductCategoryService();
   // Data from API
   const [data, setData] = useState<ProductCategoryData[]>([]);
+  const [totalRows, setTotalRows] = useState(0);
+  const [loading, setLoading] = useState(false);
+  // State for pagination and sorting
+  const [paginationModel, setPaginationModel] = useState({
+    page: 0,
+    pageSize: 5,
+  });
+  const [sortModel, setSortModel] = useState([
+    { field: "name", sort: "asc" as const },
+  ]);
   // State for delete confirmation dialog
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [selectedRow, setSelectedRow] = useState<ProductCategoryData | null>(
@@ -119,10 +129,28 @@ const ProductCategoryGrid: React.ForwardRefRenderFunction<
   ];
 
   async function loadGridData() {
-    const response: ApiResponse = await service.getList();
-    // console.log({ response })
+    setLoading(true);
+    try {
+      // Determine sort field and order
+      const sortField = sortModel[0]?.field || "name";
+      const sortOrder = sortModel[0]?.sort || "asc";
 
-    setData(response.records);
+      const response: ApiResponse = await service.getList(
+        paginationModel.page + 1, // Convert to 1-based index
+        paginationModel.pageSize,
+        sortField,
+        sortOrder,
+      );
+
+      setData(response.records || []);
+      setTotalRows(response.totalRecords || 0);
+    } catch (error) {
+      console.error("Error loading grid data:", error);
+      setData([]);
+      setTotalRows(0);
+    } finally {
+      setLoading(false);
+    }
   }
 
   // Handler for opening delete confirmation dialog
@@ -177,7 +205,7 @@ const ProductCategoryGrid: React.ForwardRefRenderFunction<
 
   useEffect(() => {
     loadGridData();
-  }, []);
+  }, [paginationModel, sortModel]);
 
   // Expose the loadGridData function to parent components
   React.useImperativeHandle(ref, () => ({
@@ -210,15 +238,15 @@ const ProductCategoryGrid: React.ForwardRefRenderFunction<
       <DataGrid
         rows={data}
         columns={columns}
-        pageSizeOptions={[5]}
-        initialState={{
-          pagination: {
-            paginationModel: { page: 0, pageSize: 5 },
-          },
-          sorting: {
-            sortModel: [{ field: "name", sort: "asc" }],
-          },
-        }}
+        loading={loading}
+        rowCount={totalRows}
+        pageSizeOptions={[5, 10, 25]}
+        paginationModel={paginationModel}
+        onPaginationModelChange={setPaginationModel}
+        sortingMode="server"
+        sortModel={sortModel}
+        onSortModelChange={setSortModel}
+        paginationMode="server"
         slots={{
           toolbar: GridToolbar,
         }}

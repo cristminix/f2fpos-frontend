@@ -7,8 +7,13 @@ export class ProductCategoryService extends BaseApiService {
     return await this.post("", data);
   }
 
-  async getList() {
-    return await this.get();
+  async getList(
+    page: number = 1,
+    limit: number = 10,
+    sortField: string,
+    sortOrder: string,
+  ) {
+    return await this.get("", { page, limit, sortField, sortOrder });
   }
 
   async remove(id: string) {

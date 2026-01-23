@@ -104,8 +104,22 @@ export class BaseApiService {
     }
   }
   async get(servicePath: string = "", payload: any = null) {
-    const endPoint = `${this.apiBaseUrl}/${this.path}${servicePath.length > 0 ? "/" + servicePath : ""}`;
+    let endPoint = `${this.apiBaseUrl}/${this.path}${servicePath.length > 0 ? "/" + servicePath : ""}`;
     // console.log({ endPoint });
+    if (payload) {
+      // Convert payload object to query string and append to endPoint
+      const queryParams = new URLSearchParams();
+      Object.keys(payload).forEach((key) => {
+        if (payload[key] !== undefined && payload[key] !== null) {
+          queryParams.append(key, String(payload[key]));
+        }
+      });
+      const queryString = queryParams.toString();
+      if (queryString) {
+        endPoint += endPoint.includes("?") ? "&" : "?";
+        endPoint += queryString;
+      }
+    }
     return await this.fetch(endPoint, {
       method: "GET",
     });
