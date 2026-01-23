@@ -12,15 +12,18 @@ import { DataGrid, type GridColDef, GridToolbar } from "@mui/x-data-grid";
 // Icons
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { ProductCategoryService } from "~/services/ProductCategoryService";
+import { MasterIngredientService } from "~/services/MasterIngredientService";
 import DeleteConfirmationDialog from "./DeleteConfirmationDialog";
-import { EditProductCategoryDialog } from "./EditProductCategoryDialog";
+import { EditMasterIngredientDialog } from "./EditMasterIngredientDialog";
 
-interface ProductCategoryData {
+interface IngredientData {
   id: number;
-  outletId: number;
-  name: string;
-  timestamp: string;
+  nama: string;
+  kode: string;
+  stokSaatIni: number;
+  stokMinimum: number;
+  satuanDasar: string;
+  satuanLain?: string;
 }
 
 interface ApiResponse {
@@ -28,30 +31,24 @@ interface ApiResponse {
   totalPages: number;
   totalRecords: number;
   recordCount: number;
-  records: ProductCategoryData[];
-}
-interface ProductCategoryData {
-  id: number;
-  outletId: number;
-  name: string;
-  timestamp: string;
+  records: IngredientData[];
 }
 
-interface ProductCategoryGridProps {}
+interface MasterIngredientGridProps {}
 
 // Define the ref type to expose methods
-export interface ProductCategoryGridRef {
+export interface MasterIngredientGridRef {
   loadGridData: () => void;
 }
 
-const ProductCategoryGrid: React.ForwardRefRenderFunction<
-  ProductCategoryGridRef,
-  ProductCategoryGridProps
+const MasterIngredientGrid: React.ForwardRefRenderFunction<
+  MasterIngredientGridRef,
+  MasterIngredientGridProps
 > = (_, ref) => {
   const theme = useTheme();
-  const service = new ProductCategoryService();
+  const service = new MasterIngredientService();
   // Data from API
-  const [data, setData] = useState<ProductCategoryData[]>([]);
+  const [data, setData] = useState<IngredientData[]>([]);
   const [totalRows, setTotalRows] = useState(0);
   const [loading, setLoading] = useState(false);
   // State for pagination and sorting
@@ -60,25 +57,25 @@ const ProductCategoryGrid: React.ForwardRefRenderFunction<
     pageSize: 5,
   });
   const [sortModel, setSortModel] = useState([
-    { field: "name", sort: "asc" as const },
+    { field: "nama", sort: "asc" as const },
   ]);
   // State for delete confirmation dialog
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [selectedRow, setSelectedRow] = useState<ProductCategoryData | null>(
+  const [selectedRow, setSelectedRow] = useState<IngredientData | null>(
     null,
   );
   // State for edit dialog
   const [openEditDialog, setOpenEditDialog] = useState(false);
-  const [editingRow, setEditingRow] = useState<ProductCategoryData | null>(
+  const [editingRow, setEditingRow] = useState<IngredientData | null>(
     null,
   );
 
-  // Definisi kolom
+  // Column definitions
   const columns: GridColDef[] = [
     {
-      field: "name",
-      headerName: "Kategori",
-      flex: 1,
+      field: "nama",
+      headerName: "Nama Bahan Baku",
+      flex: 2,
       renderHeader: (params) => (
         <Box display="flex" alignItems="center">
           {params.colDef.headerName}
@@ -91,6 +88,58 @@ const ProductCategoryGrid: React.ForwardRefRenderFunction<
         return 0;
       },
       cellClassName: "MuiDataGrid-cell--textPrimary",
+    },
+    {
+      field: "kode",
+      headerName: "Kode/SKU",
+      flex: 1,
+      renderHeader: (params) => (
+        <Box display="flex" alignItems="center">
+          {params.colDef.headerName}
+        </Box>
+      ),
+    },
+    {
+      field: "stokSaatIni",
+      headerName: "Stok Saat Ini",
+      flex: 1,
+      type: "number",
+      renderHeader: (params) => (
+        <Box display="flex" alignItems="center">
+          {params.colDef.headerName}
+        </Box>
+      ),
+    },
+    {
+      field: "stokMinimum",
+      headerName: "Stok Minimum",
+      flex: 1,
+      type: "number",
+      renderHeader: (params) => (
+        <Box display="flex" alignItems="center">
+          {params.colDef.headerName}
+        </Box>
+      ),
+    },
+    {
+      field: "satuanDasar",
+      headerName: "Satuan Dasar",
+      flex: 1,
+      renderHeader: (params) => (
+        <Box display="flex" alignItems="center">
+          {params.colDef.headerName}
+        </Box>
+      ),
+    },
+    {
+      field: "satuanLain",
+      headerName: "Satuan Beli Lain",
+      flex: 1,
+      renderHeader: (params) => (
+        <Box display="flex" alignItems="center">
+          {params.colDef.headerName}
+        </Box>
+      ),
     },
     {
       field: "actions",
@@ -132,7 +181,7 @@ const ProductCategoryGrid: React.ForwardRefRenderFunction<
     setLoading(true);
     try {
       // Determine sort field and order
-      const sortField = sortModel[0]?.field || "name";
+      const sortField = sortModel[0]?.field || "nama";
       const sortOrder = sortModel[0]?.sort || "asc";
 
       const response: ApiResponse = await service.getList(
@@ -154,7 +203,7 @@ const ProductCategoryGrid: React.ForwardRefRenderFunction<
   }
 
   // Handler for opening delete confirmation dialog
-  const handleOpenDeleteDialog = (row: ProductCategoryData) => {
+  const handleOpenDeleteDialog = (row: IngredientData) => {
     setSelectedRow(row);
     setOpenDeleteDialog(true);
   };
@@ -176,15 +225,15 @@ const ProductCategoryGrid: React.ForwardRefRenderFunction<
         // Close the dialog
         handleCloseDeleteDialog();
       } catch (error) {
-        console.error("Error deleting product category:", error);
+        console.error("Error deleting ingredient:", error);
         // Optionally show an error message to the user
-        alert(`Failed to delete category: ${error}`);
+        alert(`Failed to delete ingredient: ${error}`);
       }
     }
   };
 
   // Handler for opening edit dialog
-  const handleOpenEditDialog = (row: ProductCategoryData) => {
+  const handleOpenEditDialog = (row: IngredientData) => {
     setEditingRow(row);
     setOpenEditDialog(true);
   };
@@ -271,18 +320,18 @@ const ProductCategoryGrid: React.ForwardRefRenderFunction<
         open={openDeleteDialog}
         onClose={handleCloseDeleteDialog}
         onConfirm={handleConfirmDelete}
-        itemName={selectedRow?.name}
+        itemName={selectedRow?.nama}
       />
-      <EditProductCategoryDialog
+      <EditMasterIngredientDialog
         open={openEditDialog}
         onClose={handleCloseEditDialog}
         onUpdateSuccess={handleEditSuccess}
-        categoryData={editingRow}
+        ingredientData={editingRow}
       />
     </Box>
   );
 };
 
-export default forwardRef(ProductCategoryGrid);
+export default forwardRef(MasterIngredientGrid);
 
-export { ProductCategoryGrid };
+export { MasterIngredientGrid };
