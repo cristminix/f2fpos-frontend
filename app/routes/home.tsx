@@ -1,27 +1,20 @@
-import type { Route } from "./+types/home"
+import type { Route } from "./+types/home";
 
-import ProtectedRoute from "~/components/guards/ProtectedRoute"
-import ProtectedLayout from "~/components/layouts/ProtectedLayout"
-import React, { useEffect } from "react"
-import { useNavigate } from "react-router"
-import { useAuth } from "../contexts/AuthContext"
+import ProtectedRoute from "~/components/guards/ProtectedRoute";
+import ProtectedLayout from "~/components/layouts/ProtectedLayout";
+import { useEffect } from "react";
+import { useNavigate } from "react-router";
 
 export function meta({}: Route.MetaArgs) {
-  return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
-  ]
+  return [{ title: "F2F POS APP" }, { name: "description", content: "Hi!" }];
 }
 
 export default function Home() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Panggil fungsi logout untuk menghapus sesi pengguna
-
-    // Arahkan pengguna ke halaman login setelah logout
-    navigate("/dashboard")
-  }, [navigate])
+    navigate("/dashboard");
+  }, [navigate]);
   return (
     <ProtectedRoute>
       <ProtectedLayout>
@@ -30,5 +23,5 @@ export default function Home() {
         </div>
       </ProtectedLayout>
     </ProtectedRoute>
-  )
+  );
 }

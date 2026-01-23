@@ -1,45 +1,67 @@
-import React, { useEffect, useState, useRef, forwardRef } from "react"
-import { Box, Typography, Container, IconButton, useTheme, Button } from "@mui/material"
-import { DataGrid, type GridColDef, GridToolbar } from "@mui/x-data-grid"
+import React, { useEffect, useState, useRef, forwardRef } from "react";
+import {
+  Box,
+  Typography,
+  Container,
+  IconButton,
+  useTheme,
+  Button,
+} from "@mui/material";
+import { DataGrid, type GridColDef, GridToolbar } from "@mui/x-data-grid";
 
 // Icons
-import EditIcon from "@mui/icons-material/Edit"
-import DeleteIcon from "@mui/icons-material/Delete"
-import { ProductCategoryService } from "~/services/ProductCategoryService"
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { ProductCategoryService } from "~/services/ProductCategoryService";
+import DeleteConfirmationDialog from "./DeleteConfirmationDialog";
+import { EditProductCategoryDialog } from "./EditProductCategoryDialog";
 
 interface ProductCategoryData {
-  id: number
-  outletId: number
-  name: string
-  timestamp: string
+  id: number;
+  outletId: number;
+  name: string;
+  timestamp: string;
 }
 
 interface ApiResponse {
-  limit: number
-  totalPages: number
-  totalRecords: number
-  recordCount: number
-  records: ProductCategoryData[]
+  limit: number;
+  totalPages: number;
+  totalRecords: number;
+  recordCount: number;
+  records: ProductCategoryData[];
 }
 interface ProductCategoryData {
-  id: number
-  outletId: number
-  name: string
-  timestamp: string
+  id: number;
+  outletId: number;
+  name: string;
+  timestamp: string;
 }
 
 interface ProductCategoryGridProps {}
 
 // Define the ref type to expose methods
 export interface ProductCategoryGridRef {
-  loadGridData: () => void
+  loadGridData: () => void;
 }
 
-const ProductCategoryGrid: React.ForwardRefRenderFunction<ProductCategoryGridRef, ProductCategoryGridProps> = (_, ref) => {
-  const theme = useTheme()
-  const service = new ProductCategoryService()
+const ProductCategoryGrid: React.ForwardRefRenderFunction<
+  ProductCategoryGridRef,
+  ProductCategoryGridProps
+> = (_, ref) => {
+  const theme = useTheme();
+  const service = new ProductCategoryService();
   // Data from API
-  const [data, setData] = useState<ProductCategoryData[]>([])
+  const [data, setData] = useState<ProductCategoryData[]>([]);
+  // State for delete confirmation dialog
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [selectedRow, setSelectedRow] = useState<ProductCategoryData | null>(
+    null,
+  );
+  // State for edit dialog
+  const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [editingRow, setEditingRow] = useState<ProductCategoryData | null>(
+    null,
+  );
 
   // Definisi kolom
   const columns: GridColDef[] = [
@@ -54,9 +76,9 @@ const ProductCategoryGrid: React.ForwardRefRenderFunction<ProductCategoryGridRef
       ),
       sortComparator: (v1, v2) => {
         if (typeof v1 === "string" && typeof v2 === "string") {
-          return v1.localeCompare(v2)
+          return v1.localeCompare(v2);
         }
-        return 0
+        return 0;
       },
       cellClassName: "MuiDataGrid-cell--textPrimary",
     },
@@ -69,7 +91,7 @@ const ProductCategoryGrid: React.ForwardRefRenderFunction<ProductCategoryGridRef
         <Box display="flex" gap={1}>
           <IconButton
             size="small"
-            onClick={() => console.log("Edit:", params.row.id)}
+            onClick={() => handleOpenEditDialog(params.row)}
             sx={{
               color: theme.palette.primary.main,
               "&:hover": {
@@ -81,7 +103,7 @@ const ProductCategoryGrid: React.ForwardRefRenderFunction<ProductCategoryGridRef
           </IconButton>
           <IconButton
             size="small"
-            onClick={() => console.log("Delete:", params.row.id)}
+            onClick={() => handleOpenDeleteDialog(params.row)}
             sx={{
               color: theme.palette.error.main,
               "&:hover": {
@@ -94,23 +116,73 @@ const ProductCategoryGrid: React.ForwardRefRenderFunction<ProductCategoryGridRef
         </Box>
       ),
     },
-  ]
+  ];
 
   async function loadGridData() {
-    const response: ApiResponse = await service.getList()
+    const response: ApiResponse = await service.getList();
     // console.log({ response })
 
-    setData(response.records)
+    setData(response.records);
   }
 
+  // Handler for opening delete confirmation dialog
+  const handleOpenDeleteDialog = (row: ProductCategoryData) => {
+    setSelectedRow(row);
+    setOpenDeleteDialog(true);
+  };
+
+  // Handler for closing delete confirmation dialog
+  const handleCloseDeleteDialog = () => {
+    setOpenDeleteDialog(false);
+    setSelectedRow(null);
+  };
+
+  // Handler for confirming delete action
+  const handleConfirmDelete = async () => {
+    if (selectedRow) {
+      try {
+        // Call the delete API
+        await service.remove(selectedRow.id.toString());
+        // Refresh the grid data after successful deletion
+        await loadGridData();
+        // Close the dialog
+        handleCloseDeleteDialog();
+      } catch (error) {
+        console.error("Error deleting product category:", error);
+        // Optionally show an error message to the user
+        alert(`Failed to delete category: ${error}`);
+      }
+    }
+  };
+
+  // Handler for opening edit dialog
+  const handleOpenEditDialog = (row: ProductCategoryData) => {
+    setEditingRow(row);
+    setOpenEditDialog(true);
+  };
+
+  // Handler for closing edit dialog
+  const handleCloseEditDialog = () => {
+    setEditingRow(null);
+    setOpenEditDialog(false);
+  };
+
+  // Handler for when edit is successful
+  const handleEditSuccess = async () => {
+    // Refresh the grid data after successful update
+    await loadGridData();
+    // Close the dialog
+    handleCloseEditDialog();
+  };
+
   useEffect(() => {
-    loadGridData()
-  }, [])
+    loadGridData();
+  }, []);
 
   // Expose the loadGridData function to parent components
   React.useImperativeHandle(ref, () => ({
     loadGridData,
-  }))
+  }));
 
   return (
     <Box
@@ -121,7 +193,10 @@ const ProductCategoryGrid: React.ForwardRefRenderFunction<ProductCategoryGridRef
           border: `1px solid ${theme.palette.divider}`,
         },
         "& .MuiDataGrid-columnHeaders": {
-          backgroundColor: theme.palette.mode === "light" ? theme.palette.grey[100] : theme.palette.grey[900],
+          backgroundColor:
+            theme.palette.mode === "light"
+              ? theme.palette.grey[100]
+              : theme.palette.grey[900],
         },
         "& .MuiDataGrid-cell": {
           borderBottom: `1px solid ${theme.palette.divider}`,
@@ -163,10 +238,22 @@ const ProductCategoryGrid: React.ForwardRefRenderFunction<ProductCategoryGridRef
           },
         }}
       />
+      <DeleteConfirmationDialog
+        open={openDeleteDialog}
+        onClose={handleCloseDeleteDialog}
+        onConfirm={handleConfirmDelete}
+        itemName={selectedRow?.name}
+      />
+      <EditProductCategoryDialog
+        open={openEditDialog}
+        onClose={handleCloseEditDialog}
+        onUpdateSuccess={handleEditSuccess}
+        categoryData={editingRow}
+      />
     </Box>
-  )
-}
+  );
+};
 
-export default forwardRef(ProductCategoryGrid)
+export default forwardRef(ProductCategoryGrid);
 
-export { ProductCategoryGrid }
+export { ProductCategoryGrid };

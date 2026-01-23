@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -13,20 +13,38 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { ProductCategoryService } from "~/services/ProductCategoryService";
 
-interface AddProductCategoryDialogProps {
-  open: boolean;
-  onClose: () => void;
-  onAddSuccess: () => void;
+interface ProductCategoryData {
+  id: number;
+  outletId: number;
+  name: string;
+  timestamp: string;
 }
 
-export const AddProductCategoryDialog: React.FC<
-  AddProductCategoryDialogProps
-> = ({ open, onClose, onAddSuccess }) => {
+interface EditProductCategoryDialogProps {
+  open: boolean;
+  onClose: () => void;
+  onUpdateSuccess: () => void;
+  categoryData: ProductCategoryData | null;
+}
+
+export const EditProductCategoryDialog: React.FC<
+  EditProductCategoryDialogProps
+> = ({ open, onClose, onUpdateSuccess, categoryData }) => {
   const [name, setName] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const service = new ProductCategoryService();
+
+  // Update the form when categoryData changes
+  useEffect(() => {
+    if (categoryData) {
+      setName(categoryData.name);
+    } else {
+      setName("");
+    }
+    setError("");
+  }, [categoryData]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,24 +54,30 @@ export const AddProductCategoryDialog: React.FC<
       return;
     }
 
+    if (!categoryData) {
+      setError("Data kategori tidak ditemukan");
+      return;
+    }
+
     setLoading(true);
     setError("");
 
     try {
-      // Panggil API untuk menambah kategori
-      // Panggil API untuk menambah kategori
-      // Kita perlu mendapatkan outletId dari tempat lain, mungkin dari context atau state
-      const response = await service.create({ name, outletId: 1 }); // outletId sementara
+      // Call the update API
+      const response = await service.update(categoryData.id.toString(), {
+        name,
+        outletId: categoryData.outletId,
+      });
 
-      if (response.success && response.data?.id) {
-        onAddSuccess();
+      if (response && (response.success || response.id || !response.error)) {
+        onUpdateSuccess();
         handleClose();
       } else {
-        setError("Gagal menambah kategori. Silakan coba lagi.");
+        setError("Gagal memperbarui kategori. Silakan coba lagi.");
       }
     } catch (err) {
-      setError("Terjadi kesalahan saat menambah kategori");
-      console.error("Error adding category:", err);
+      setError("Terjadi kesalahan saat memperbarui kategori");
+      console.error("Error updating category:", err);
     } finally {
       setLoading(false);
     }
@@ -69,7 +93,7 @@ export const AddProductCategoryDialog: React.FC<
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
       <DialogTitle>
         <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Typography variant="h6">Tambah Kategori</Typography>
+          <Typography variant="h6">Ubah Kategori</Typography>
           <IconButton onClick={handleClose} size="small">
             <CloseIcon />
           </IconButton>
@@ -90,6 +114,7 @@ export const AddProductCategoryDialog: React.FC<
             onChange={(e) => setName(e.target.value)}
             error={!!error}
             helperText={error}
+            disabled={loading}
           />
         </DialogContent>
 
@@ -103,7 +128,7 @@ export const AddProductCategoryDialog: React.FC<
             color="primary"
             disabled={loading}
           >
-            {loading ? "Menyimpan..." : "Simpan"}
+            {loading ? "Memperbarui..." : "Perbarui"}
           </Button>
         </DialogActions>
       </form>

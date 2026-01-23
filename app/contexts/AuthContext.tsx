@@ -1,59 +1,59 @@
-import React, { createContext, useContext, useState, useEffect } from "react"
-import type { ReactNode } from "react"
+import React, { createContext, useContext, useState, useEffect } from "react";
+import type { ReactNode } from "react";
 
 export interface User {
-  id: string
-  username: string
-  email: string
-  role: string
-  activeOutlet: any
-  outlets: any[]
-  [key: string]: any
+  id: string;
+  username: string;
+  email: string;
+  role: string;
+  activeOutlet: any;
+  outlets: any[];
+  [key: string]: any;
 }
 
 interface AuthContextType {
-  user: User | null
-  loading: boolean
-  login: (userData: User) => void
-  logout: () => void
-  isAuthenticated: () => boolean
+  user: User | null;
+  loading: boolean;
+  login: (userData: User) => void;
+  logout: () => void;
+  isAuthenticated: () => boolean;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined)
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Check for existing session on app load
-    const storedUser = localStorage.getItem("user")
+    const storedUser = localStorage.getItem("user");
     if (storedUser) {
-      console.log(storedUser)
+      // console.log(storedUser)
       try {
-        setUser(JSON.parse(storedUser))
+        setUser(JSON.parse(storedUser));
       } catch (e) {
-        console.error("Failed to parse user data from localStorage", e)
+        console.error("Failed to parse user data from localStorage", e);
       }
     }
-    setLoading(false)
-  }, [])
+    setLoading(false);
+  }, []);
 
   const login = (userData: User) => {
-    setUser(userData)
-    localStorage.setItem("user", JSON.stringify(userData))
-  }
+    setUser(userData);
+    localStorage.setItem("user", JSON.stringify(userData));
+  };
 
   const logout = () => {
-    setUser(null)
-    localStorage.removeItem("user")
-  }
+    setUser(null);
+    localStorage.removeItem("user");
+  };
 
   const isAuthenticated = () => {
-    return !!user
-  }
+    return !!user;
+  };
 
   const value: AuthContextType = {
     user,
@@ -61,15 +61,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     login,
     logout,
     isAuthenticated,
-  }
+  };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
-}
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};
 
 export const useAuth = (): AuthContextType => {
-  const context = useContext(AuthContext)
+  const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider")
+    throw new Error("useAuth must be used within an AuthProvider");
   }
-  return context
-}
+  return context;
+};
