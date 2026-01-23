@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router";
 import {
   Drawer,
@@ -36,9 +36,10 @@ import { useOutlet } from "~/contexts/OutletContext";
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user } = useAuth();
-  const { activeOutlet, outlets } = user as User;
+  const { activeOutlet: currentActiveOutlet, outlets } = user as User;
   // console.log({ activeOutlet, outlets })
   const { selectedOutlet, setSelectedOutlet } = useOutlet();
+  const [activeOutletId, setActiveOutletId] = useState(currentActiveOutlet.id);
   const loginService = new LoginService();
   const currentUser = loginService.getCurrentUser();
   const toggleDrawer =
@@ -50,7 +51,8 @@ const Navigation = () => {
       ) {
         return;
       }
-
+      setActiveOutletId(loginService.getCurrentOutletId());
+      // console.log({ activeOutletId });
       setIsOpen(open);
     };
 
@@ -138,12 +140,12 @@ const Navigation = () => {
             </Box>
           </Box>
         </Box>
-        <Box sx={{ pt: 2, mt: 1 }} onClick={(e) => e.stopPropagation()}>
+        <Box sx={{ pt: 2, mt: 1 }}>
           <FormControl fullWidth size="small">
             <InputLabel id="outlet-select-label">Pilih Outlet</InputLabel>
             <Select
               labelId="outlet-select-label"
-              value={selectedOutlet}
+              value={activeOutletId}
               label="Pilih Outlet"
               sx={{
                 backgroundColor: "background.paper",
@@ -159,7 +161,7 @@ const Navigation = () => {
                   borderColor: "primary.main",
                 },
               }}
-              onChange={(e) => setSelectedOutlet(e.target.value as string)}
+              onChange={(e) => onSelectOutletChange(e)}
             >
               {outlets.map((outlet, key) => (
                 <MenuItem
@@ -212,6 +214,11 @@ const Navigation = () => {
       <Divider sx={{ borderColor: "divider" }} />
     </Box>
   );
+  async function onSelectOutletChange(e: any) {
+    setActiveOutletId(selectedOutlet);
+
+    setSelectedOutlet(e.target.value as string);
+  }
 
   return (
     <>
