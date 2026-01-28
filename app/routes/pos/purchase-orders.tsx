@@ -1,6 +1,6 @@
 import type { Route } from "./+types/purchase-orders"
-import ProtectedLayout from "../components/layouts/ProtectedLayout"
-import { PurchaseOrderPage } from "../pages/PurchaseOrderPage"
+import ProtectedLayout from "../../components/layouts/ProtectedLayout"
+import { PurchaseOrderPage } from "../../pages/pos/PurchaseOrderPage"
 
 export function meta({}: Route.MetaArgs) {
   return [

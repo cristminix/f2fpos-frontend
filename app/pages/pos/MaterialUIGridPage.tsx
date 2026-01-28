@@ -1,7 +1,7 @@
 import React from "react"
 import { Container, Typography, Paper, Box, Button } from "@mui/material"
-import { MaterialUIGrid } from "../components/ui/MaterialUIGrid"
-import { useTheme } from "../components/common/ThemeProvider"
+import { MaterialUIGrid } from "../../components/ui/MaterialUIGrid"
+import { useTheme } from "../../components/common/ThemeProvider"
 
 const MaterialUIGridPage = () => {
   const { toggleTheme, theme } = useTheme()

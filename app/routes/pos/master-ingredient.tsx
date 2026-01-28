@@ -1,6 +1,6 @@
 import type { Route } from "./+types/master-ingredient"
-import ProtectedLayout from "../components/layouts/ProtectedLayout"
-import { MasterIngredient } from "../pages/MasterIngredient"
+import ProtectedLayout from "../../components/layouts/ProtectedLayout"
+import { MasterIngredient } from "../../pages/pos/MasterIngredient"
 
 export function meta({}: Route.MetaArgs) {
   return [

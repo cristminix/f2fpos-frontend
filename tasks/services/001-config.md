@@ -12,7 +12,7 @@
 ```json
 {
   "id": 16,
-  "name": "F2F Mart",
+  "name": " Mart",
   "address": "Jl. Sudirman No. 5",
   "business_type": "RETAIL",
   "business_type_display": "Retail / Toko",

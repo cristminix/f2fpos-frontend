@@ -1,7 +1,7 @@
 import type { Route } from "./+types/shift-report"
 import ProtectedRoute from "~/components/guards/ProtectedRoute"
 import ProtectedLayout from "~/components/layouts/ProtectedLayout"
-import ShiftReportPage from "~/pages/ShiftReportPage"
+import ShiftReportPage from "~/pages/pos/ShiftReportPage"
 
 export function meta({}: Route.MetaArgs) {
   return [

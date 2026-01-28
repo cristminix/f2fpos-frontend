@@ -1,5 +1,5 @@
 import React, { type ReactNode } from "react"
-import Navigation from "~/components/ui/Navigation"
+import Navigation from "~/components/ui/admin/Navigation"
 
 const AdminTemplate: React.FC<{
   children: ReactNode

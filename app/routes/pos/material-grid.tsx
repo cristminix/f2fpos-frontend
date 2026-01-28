@@ -1,4 +1,4 @@
-import MaterialUIGridPage from "../pages/MaterialUIGridPage"
+import MaterialUIGridPage from "../../pages/pos/MaterialUIGridPage"
 
 export function meta() {
   return [

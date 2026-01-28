@@ -41,7 +41,7 @@ const Navigation = () => {
   const { user } = useAuth()
   const { activeOutlet, outlets } = user as User
   console.log({ activeOutlet, outlets })
-  const [selectedOutlet, setSelectedOutlet] = useState(activeOutlet.id)
+  const [selectedOutlet, setSelectedOutlet] = useState("")
   const loginService = new LoginService()
   const currentUser = loginService.getCurrentUser()
   const toggleDrawer =
@@ -58,39 +58,43 @@ const Navigation = () => {
     }
 
   const menuItems = [
-    { text: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
-    { text: "Sales", icon: <ShoppingCartIcon />, path: "/sales" },
+    // { text: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
+    // { text: "Sales", icon: <ShoppingCartIcon />, path: "/sales" },
+    // {
+    //   text: "Riwayat Penjualan",
+    //   icon: <HistoryIcon />,
+    //   path: "/sales/history",
+    // },
+    // { text: "Laporan Shift", icon: <SummarizeIcon />, path: "/shift-report" },
+    // { text: "Master Produk", icon: <InventoryIcon />, path: "/master-product" },
+    // {
+    //   text: "Master Kategori",
+    //   icon: <CategoryIcon />,
+    //   path: "/product-category",
+    // },
+    // {
+    //   text: "Master Bahan Baku",
+    //   icon: <ScienceIcon />,
+    //   path: "/master-ingredient",
+    // },
+    // {
+    //   text: "Supplier",
+    //   icon: <LocalShippingIcon />,
+    //   path: "/suppliers",
+    // },
+    // {
+    //   text: "Purchase Order",
+    //   icon: <ReceiptLongIcon />,
+    //   path: "/purchase-orders",
+    // },
+    // { text: "Penyesuaian Stok", icon: <RuleIcon />, path: "/stock-adjustment" },
+    // { text: "Outlet Saya", icon: <StoreIcon />, path: "/my-outlet" },
     {
-      text: "Riwayat Penjualan",
-      icon: <HistoryIcon />,
-      path: "/sales/history",
+      text: "Manajemen User",
+      icon: <ManageAccountsIcon />,
+      path: "/admin/users",
     },
-    { text: "Laporan Shift", icon: <SummarizeIcon />, path: "/shift-report" },
-    { text: "Master Produk", icon: <InventoryIcon />, path: "/master-product" },
-    {
-      text: "Master Kategori",
-      icon: <CategoryIcon />,
-      path: "/product-category",
-    },
-    {
-      text: "Master Bahan Baku",
-      icon: <ScienceIcon />,
-      path: "/master-ingredient",
-    },
-    {
-      text: "Supplier",
-      icon: <LocalShippingIcon />,
-      path: "/suppliers",
-    },
-    {
-      text: "Purchase Order",
-      icon: <ReceiptLongIcon />,
-      path: "/purchase-orders",
-    },
-    { text: "Penyesuaian Stok", icon: <RuleIcon />, path: "/stock-adjustment" },
-    { text: "Outlet Saya", icon: <StoreIcon />, path: "/my-outlet" },
-    { text: "Manajemen Staff", icon: <ManageAccountsIcon />, path: "/staff" },
-    { text: "Laporan Owner", icon: <AnalyticsIcon />, path: "/owner-reports" },
+    // { text: "Laporan Owner", icon: <AnalyticsIcon />, path: "/owner-reports" },
     { text: "Logout", icon: <LogoutIcon />, path: null },
   ]
 
@@ -141,7 +145,11 @@ const Navigation = () => {
             </Box>
           </Box>
         </Box>
-        <Box sx={{ pt: 2, mt: 1 }} onClick={(e) => e.stopPropagation()}>
+        <Box
+          sx={{ pt: 2, mt: 1 }}
+          onClick={(e) => e.stopPropagation()}
+          className="hidden"
+        >
           <FormControl fullWidth size="small">
             <InputLabel id="outlet-select-label">Pilih Outlet</InputLabel>
             <Select

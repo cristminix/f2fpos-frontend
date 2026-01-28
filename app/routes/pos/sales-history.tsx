@@ -1,20 +1,21 @@
-import type { Route } from "./+types/master-product"
+import type { Route } from "./+types/sales-history"
 import ProtectedRoute from "~/components/guards/ProtectedRoute"
 import ProtectedLayout from "~/components/layouts/ProtectedLayout"
-import MasterProductPage from "~/pages/MasterProductPage"
+
+import SalesHistoryPage from "~/pages/pos/SalesHistoryPage"
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Master Produk" },
-    { name: "description", content: "Master Produk" },
+    { title: "Sales History" },
+    { name: "description", content: "Riwayat Penjualan" },
   ]
 }
 
-export default function MasterProduct() {
+export default function SalesHistory() {
   return (
     <ProtectedRoute>
       <ProtectedLayout>
-        <MasterProductPage />
+        <SalesHistoryPage />
       </ProtectedLayout>
     </ProtectedRoute>
   )

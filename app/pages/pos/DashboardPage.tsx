@@ -11,7 +11,7 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material"
-import DashboardCard from "../components/common/DashboardCard"
+import DashboardCard from "../../components/common/DashboardCard"
 import ApexCharts from "apexcharts"
 import Table from "@mui/material/Table"
 import TableBody from "@mui/material/TableBody"
@@ -222,7 +222,7 @@ const DashboardPage: React.FC = () => {
             <Typography variant="h4" gutterBottom>
               Dashboard
             </Typography>
-            <div>Outlet: F2F Mart</div>
+            <div>Outlet: Mart</div>
           </Box>
           <Box>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>

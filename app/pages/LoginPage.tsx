@@ -193,7 +193,7 @@ const LoginPage: React.FC = () => {
           <Grid container>
             <div>
               <code>
-                demo@example.com
+                admin@example.com
                 <br />
                 password
               </code>

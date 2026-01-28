@@ -1,6 +1,6 @@
 import type { Route } from "./+types/staff"
-import ProtectedLayout from "../components/layouts/ProtectedLayout"
-import { StaffPage } from "../pages/StaffPage"
+import ProtectedLayout from "../../components/layouts/ProtectedLayout"
+import { StaffPage } from "../../pages/pos/StaffPage"
 
 export function meta({}: Route.MetaArgs) {
   return [

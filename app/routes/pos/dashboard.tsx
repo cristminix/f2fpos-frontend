@@ -1,21 +1,17 @@
-import type { Route } from "./+types/sales-history"
+import type { Route } from "./+types/dashboard"
 import ProtectedRoute from "~/components/guards/ProtectedRoute"
 import ProtectedLayout from "~/components/layouts/ProtectedLayout"
-
-import SalesHistoryPage from "~/pages/SalesHistoryPage"
+import DashboardPage from "~/pages/pos/DashboardPage"
 
 export function meta({}: Route.MetaArgs) {
-  return [
-    { title: "Sales History" },
-    { name: "description", content: "Riwayat Penjualan" },
-  ]
+  return [{ title: "Dashboard" }, { name: "description", content: "Dashboard" }]
 }
 
-export default function SalesHistory() {
+export default function Dashboard() {
   return (
     <ProtectedRoute>
       <ProtectedLayout>
-        <SalesHistoryPage />
+        <DashboardPage />
       </ProtectedLayout>
     </ProtectedRoute>
   )

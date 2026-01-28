@@ -27,7 +27,7 @@ import {
   DialogTitle,
 } from "@mui/material"
 import { Delete, Edit } from "@mui/icons-material"
-import { useTheme } from "../components/common/ThemeProvider"
+import { useTheme } from "../../components/common/ThemeProvider"
 
 // Interface untuk data user
 interface User {

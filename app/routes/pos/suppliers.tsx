@@ -1,6 +1,6 @@
 import type { Route } from "./+types/suppliers"
-import ProtectedLayout from "../components/layouts/ProtectedLayout"
-import { SupplierPage } from "../pages/SupplierPage"
+import ProtectedLayout from "../../components/layouts/ProtectedLayout"
+import { SupplierPage } from "../../pages/pos/SupplierPage"
 
 export function meta({}: Route.MetaArgs) {
   return [

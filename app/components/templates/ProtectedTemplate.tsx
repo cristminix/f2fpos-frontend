@@ -1,7 +1,7 @@
 import { Box, Button } from "@mui/material"
 import { DarkMode, LightMode, Settings } from "@mui/icons-material"
 import React, { type ReactNode, useState } from "react"
-import Navigation from "~/components/ui/Navigation"
+import Navigation from "~/components/ui/pos/Navigation"
 import { useTheme } from "../common/ThemeProvider"
 import SettingsForm from "../common/SettingsForm"
 
@@ -23,7 +23,7 @@ const ProtectedTemplate: React.FC<{
           <div className="pl-2 flex w-full">
             {showSidebar && <Navigation />}
             <div className="justify-between flex flex-row w-full">
-              <h1 className="pt-3">F2F POS</h1>
+              <h1 className="pt-3">B2B</h1>
               <div>
                 <Button onClick={toggleTheme} variant="text" color="inherit">
                   {theme === "light" ? <DarkMode /> : <LightMode />}

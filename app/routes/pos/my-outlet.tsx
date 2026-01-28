@@ -1,6 +1,6 @@
 import type { Route } from "./+types/my-outlet"
-import ProtectedLayout from "../components/layouts/ProtectedLayout"
-import { MyOutletPage } from "../pages/MyOutletPage"
+import ProtectedLayout from "../../components/layouts/ProtectedLayout"
+import { MyOutletPage } from "../../pages/pos/MyOutletPage"
 
 export function meta({}: Route.MetaArgs) {
   return [

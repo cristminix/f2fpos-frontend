@@ -1,6 +1,6 @@
 import type { Route } from "./+types/stock-adjustment"
-import ProtectedLayout from "../components/layouts/ProtectedLayout"
-import { StockAdjustmentPage } from "../pages/StockAdjustmentPage"
+import ProtectedLayout from "../../components/layouts/ProtectedLayout"
+import { StockAdjustmentPage } from "../../pages/pos/StockAdjustmentPage"
 
 export function meta({}: Route.MetaArgs) {
   return [

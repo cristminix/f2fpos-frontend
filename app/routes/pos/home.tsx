@@ -1,10 +1,10 @@
-import type { Route } from "./+types/home"
+import type { Route } from "../+types/home"
 
 import ProtectedRoute from "~/components/guards/ProtectedRoute"
 import ProtectedLayout from "~/components/layouts/ProtectedLayout"
 import React, { useEffect } from "react"
 import { useNavigate } from "react-router"
-import { useAuth } from "../contexts/AuthContext"
+import { useAuth } from "../../contexts/AuthContext"
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -18,8 +18,9 @@ export default function Home() {
 
   useEffect(() => {
     // Panggil fungsi logout untuk menghapus sesi pengguna
+
     // Arahkan pengguna ke halaman login setelah logout
-    navigate("/admin/users")
+    navigate("/dashboard")
   }, [navigate])
   return (
     <ProtectedRoute>
