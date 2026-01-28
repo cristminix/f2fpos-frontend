@@ -4,10 +4,8 @@ export class BaseApiService {
   constructor() {
     const host = document.location.host
     console.log(document.location.host)
-    if (host.includes("f2fpos.pages.dev")) {
-      this.apiBaseUrl = "https://f2fpos-backend.cristminix.workers.dev/api"
-    } else if (host.includes("jonisteak.com")) {
-      this.apiBaseUrl = "https://f2fposv1.jonisteak.com/api"
+    if (host.includes("b2b.pages.dev")) {
+      this.apiBaseUrl = "https://b2b-backend.pawon.workers.dev/api"
     }
   }
   setApiBaseUrl(url: string) {
@@ -104,41 +102,34 @@ export class BaseApiService {
     }
   }
   async get(servicePath: string = "", payload: any = null) {
-    const endPoint = `${this.apiBaseUrl}/${this.path}${servicePath.length > 0 ? "/" + servicePath : ""}`
-    console.log({ endPoint })
-    return await this.fetch(endPoint, {
+    let url = `${this.apiBaseUrl}/${this.path}${servicePath ? `/${servicePath}` : ""}`
+    if (payload) {
+      const queryString = new URLSearchParams(payload).toString()
+      url += `?${queryString}`
+    }
+    console.log({ endPoint: url })
+    return await this.fetch(url, {
       method: "GET",
     })
   }
   async post(servicePath: string, payload: any) {
-    const endPoint = `${this.apiBaseUrl}/${this.path}/${servicePath}`
+    const endPoint = `${this.apiBaseUrl}/${this.path}${servicePath ? `/${servicePath}` : ""}`
     return await this.fetch(endPoint, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer token ${this.getAccessToken()}`,
-        "Content-Type": "application/json",
-        body: JSON.stringify(payload),
-      },
+      method: "POST",
+      body: JSON.stringify(payload),
     })
   }
   async put(servicePath: string, payload: any) {
-    const endPoint = `${this.apiBaseUrl}/${this.path}/${servicePath}`
+    const endPoint = `${this.apiBaseUrl}/${this.path}${servicePath ? `/${servicePath}` : ""}`
     return await this.fetch(endPoint, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer token ${this.getAccessToken()}`,
-        "Content-Type": "application/json",
-      },
+      method: "PUT",
+      body: JSON.stringify(payload),
     })
   }
-  async delete(servicePath: string, payload: any) {
-    const endPoint = `${this.apiBaseUrl}/${this.path}/${servicePath}`
+  async delete(servicePath: string) {
+    const endPoint = `${this.apiBaseUrl}/${this.path}${servicePath ? `/${servicePath}` : ""}`
     return await this.fetch(endPoint, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer token ${this.getAccessToken()}`,
-        "Content-Type": "application/json",
-      },
+      method: "DELETE",
     })
   }
 }

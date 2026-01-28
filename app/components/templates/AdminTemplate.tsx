@@ -11,7 +11,7 @@ const AdminTemplate: React.FC<{
         <header className="bg-red-100 p-4 shadow-md flex">
           {showAdminNav && <Navigation />} <h1 className="p-3">Admin Area</h1>
         </header>
-        <main className="container mx-auto p-4">{children}</main>
+        <main className=" p-4">{children}</main>
       </div>
     </div>
   )
