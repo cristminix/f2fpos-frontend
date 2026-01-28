@@ -3,6 +3,7 @@ import { type RouteConfig, index, route } from "@react-router/dev/routes"
 export default [
   index("routes/home.tsx"),
   route("/admin/users", "routes/admin/users.tsx"),
+  route("/admin/members", "routes/admin/members.tsx"),
   // route("/material-grid", "pages/MaterialUIGridPage.tsx"),
   // route("/grid-table-form", "pages/GridTableFormPage.tsx"),
   route("/login", "routes/login.tsx"),
