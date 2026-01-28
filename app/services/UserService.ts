@@ -14,4 +14,12 @@ export class UserService extends BaseApiService {
   async update(id: number, payload: any) {
     return await this.put(`${id}`, payload)
   }
+
+  async delete(id: number) {
+    return await super.delete(String(id))
+  }
+
+  async getById(id: number) {
+    return await this.get(String(id))
+  }
 }

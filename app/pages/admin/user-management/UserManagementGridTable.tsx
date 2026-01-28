@@ -4,7 +4,11 @@ import {
   type GridColDef,
   type GridPaginationModel,
 } from "@mui/x-data-grid"
-import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material"
+import {
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  Visibility as ViewIcon,
+} from "@mui/icons-material"
 import { useEffect, useState } from "react"
 import { UserService } from "~/services/UserService"
 
@@ -16,10 +20,14 @@ interface UserData {
 
 interface UserManagementGridTableProps {
   onEditClick: (user: UserData) => void
+  onDeleteClick: (user: UserData) => void
+  onViewClick: (user: UserData) => void
 }
 
 const UserManagementGridTable = ({
   onEditClick,
+  onDeleteClick,
+  onViewClick,
 }: UserManagementGridTableProps) => {
   const theme = useTheme()
   const service = new UserService()
@@ -53,6 +61,13 @@ const UserManagementGridTable = ({
       renderCell: (params) => (
         <Box>
           <IconButton
+            aria-label="view"
+            sx={{ color: theme.palette.info.main }}
+            onClick={() => onViewClick(params.row)}
+          >
+            <ViewIcon />
+          </IconButton>
+          <IconButton
             aria-label="edit"
             sx={{ color: theme.palette.primary.main }}
             onClick={() => onEditClick(params.row)}
@@ -62,6 +77,7 @@ const UserManagementGridTable = ({
           <IconButton
             aria-label="delete"
             sx={{ color: theme.palette.error.main }}
+            onClick={() => onDeleteClick(params.row)}
           >
             <DeleteIcon />
           </IconButton>

@@ -126,8 +126,10 @@ export class BaseApiService {
       body: JSON.stringify(payload),
     })
   }
-  async delete(servicePath: string) {
-    const endPoint = `${this.apiBaseUrl}/${this.path}${servicePath ? `/${servicePath}` : ""}`
+  async delete(servicePath: string | number) {
+    const endPoint = `${this.apiBaseUrl}/${this.path}${
+      servicePath ? `/${servicePath}` : ""
+    }`
     return await this.fetch(endPoint, {
       method: "DELETE",
     })
