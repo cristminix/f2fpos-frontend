@@ -1,0 +1,139 @@
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  TextField,
+  Box,
+} from "@mui/material"
+import { useFormik } from "formik"
+import * as Yup from "yup"
+import type { Product } from "~/types/product"
+
+interface ProductFormProps {
+  open: boolean
+  onClose: () => void
+  onSubmit: (values: any, formikBag: any) => void
+  initialData?: Product | null
+}
+
+const ProductForm = ({
+  open,
+  onClose,
+  onSubmit,
+  initialData,
+}: ProductFormProps) => {
+  const formik = useFormik({
+    enableReinitialize: true,
+    initialValues: {
+      id: initialData?.id || null,
+      name: initialData?.name || "",
+      weight: initialData?.weight || 0,
+      price: initialData?.price || 0,
+      description: initialData?.description || "",
+      sku: initialData?.sku || "",
+    },
+    validationSchema: Yup.object({
+      name: Yup.string().required("Nama Produk wajib diisi"),
+      weight: Yup.number()
+        .required("Berat wajib diisi")
+        .min(0, "Berat tidak boleh negatif")
+        .integer("Berat harus berupa bilangan bulat"),
+      price: Yup.number()
+        .required("Harga wajib diisi")
+        .min(0, "Harga tidak boleh negatif")
+        .integer("Harga harus berupa bilangan bulat"),
+      description: Yup.string(),
+      sku: Yup.string().required("SKU wajib diisi"),
+    }),
+    onSubmit: (values: any, formikBag: any) => {
+      onSubmit(values, formikBag)
+    },
+  })
+
+  return (
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+      <form onSubmit={formik.handleSubmit}>
+        <DialogTitle>
+          {initialData ? "Edit Produk" : "Tambah Produk Baru"}
+        </DialogTitle>
+        <DialogContent>
+          <Box sx={{ mt: 2 }}>
+            <TextField
+              fullWidth
+              label="Nama Produk"
+              name="name"
+              value={formik.values.name}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.name && Boolean(formik.errors.name)}
+              helperText={formik.touched.name && formik.errors.name}
+              margin="normal"
+            />
+            <TextField
+              fullWidth
+              label="SKU"
+              name="sku"
+              value={formik.values.sku}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.sku && Boolean(formik.errors.sku)}
+              helperText={formik.touched.sku && formik.errors.sku}
+              margin="normal"
+            />
+            <TextField
+              fullWidth
+              label="Berat (gram)"
+              name="weight"
+              type="number"
+              value={formik.values.weight}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.weight && Boolean(formik.errors.weight)}
+              helperText={formik.touched.weight && formik.errors.weight}
+              margin="normal"
+            />
+            <TextField
+              fullWidth
+              label="Harga"
+              name="price"
+              type="number"
+              value={formik.values.price}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.price && Boolean(formik.errors.price)}
+              helperText={formik.touched.price && formik.errors.price}
+              margin="normal"
+            />
+            <TextField
+              fullWidth
+              label="Deskripsi"
+              name="description"
+              multiline
+              rows={3}
+              value={formik.values.description}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={
+                formik.touched.description && Boolean(formik.errors.description)
+              }
+              helperText={
+                formik.touched.description && formik.errors.description
+              }
+              margin="normal"
+            />
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={onClose}>Batal</Button>
+          <Button type="submit" variant="contained" color="primary">
+            {initialData ? "Simpan" : "Tambah"}
+          </Button>
+        </DialogActions>
+      </form>
+    </Dialog>
+  )
+}
+
+export default ProductForm

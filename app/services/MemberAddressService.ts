@@ -1,7 +1,7 @@
 import { BaseApiService } from "./ApiService"
 
-export class ProductCategoryService extends BaseApiService {
-  path = "ProductCategoryService"
+export class MemberAddressService extends BaseApiService {
+  path = "MemberAddressService"
 
   async getList(page = 1, limit = 10) {
     return await this.get("", { page, limit })

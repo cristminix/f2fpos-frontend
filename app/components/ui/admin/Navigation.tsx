@@ -1,5 +1,5 @@
-import React, { useState } from "react"
-import { Link } from "react-router"
+import React, { useState } from "react";
+import { Link } from "react-router";
 import {
   Drawer,
   List,
@@ -14,36 +14,40 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-} from "@mui/material"
-import MenuIcon from "@mui/icons-material/Menu"
-import HomeIcon from "@mui/icons-material/Home"
-import PeopleIcon from "@mui/icons-material/People"
-import GridOnIcon from "@mui/icons-material/GridOn"
-import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew"
-import DashboardIcon from "@mui/icons-material/Dashboard"
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart"
-import HistoryIcon from "@mui/icons-material/History"
-import SummarizeIcon from "@mui/icons-material/Summarize"
-import InventoryIcon from "@mui/icons-material/Inventory"
-import CategoryIcon from "@mui/icons-material/Category"
-import ScienceIcon from "@mui/icons-material/Science"
-import LocalShippingIcon from "@mui/icons-material/LocalShipping"
-import ReceiptLongIcon from "@mui/icons-material/ReceiptLong"
-import RuleIcon from "@mui/icons-material/Rule"
-import StoreIcon from "@mui/icons-material/Store"
-import ManageAccountsIcon from "@mui/icons-material/ManageAccounts"
-import AnalyticsIcon from "@mui/icons-material/Analytics"
-import LogoutIcon from "@mui/icons-material/Logout"
-import { LoginService } from "~/services/LoginService"
-import { useAuth, type User } from "~/contexts/AuthContext"
+} from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import HomeIcon from "@mui/icons-material/Home";
+import PeopleIcon from "@mui/icons-material/People";
+import GridOnIcon from "@mui/icons-material/GridOn";
+import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import HistoryIcon from "@mui/icons-material/History";
+import SummarizeIcon from "@mui/icons-material/Summarize";
+import InventoryIcon from "@mui/icons-material/Inventory";
+import CategoryIcon from "@mui/icons-material/Category";
+import ScienceIcon from "@mui/icons-material/Science";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
+import RuleIcon from "@mui/icons-material/Rule";
+import StoreIcon from "@mui/icons-material/Store";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import GroupIcon from "@mui/icons-material/Group";
+import FastfoodIcon from "@mui/icons-material/Fastfood";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
+import AnalyticsIcon from "@mui/icons-material/Analytics";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { LoginService } from "~/services/LoginService";
+import { useAuth, type User } from "~/contexts/AuthContext";
 const Navigation = () => {
-  const [isOpen, setIsOpen] = useState(false)
-  const { user } = useAuth()
-  const { activeOutlet, outlets } = user as User
-  console.log({ activeOutlet, outlets })
-  const [selectedOutlet, setSelectedOutlet] = useState("")
-  const loginService = new LoginService()
-  const currentUser = loginService.getCurrentUser()
+  const [isOpen, setIsOpen] = useState(false);
+  const { user } = useAuth();
+  const { activeOutlet, outlets } = user as User;
+  console.log({ activeOutlet, outlets });
+  const [selectedOutlet, setSelectedOutlet] = useState("");
+  const loginService = new LoginService();
+  const currentUser = loginService.getCurrentUser();
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
       if (
@@ -51,11 +55,11 @@ const Navigation = () => {
         ((event as React.KeyboardEvent).key === "Tab" ||
           (event as React.KeyboardEvent).key === "Shift")
       ) {
-        return
+        return;
       }
 
-      setIsOpen(open)
-    }
+      setIsOpen(open);
+    };
 
   const menuItems = [
     // { text: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
@@ -114,9 +118,14 @@ const Navigation = () => {
       icon: <AccountBalanceIcon />,
       path: "/admin/member-bank-accounts",
     },
+    {
+      text: "Kategori Produk",
+      icon: <CategoryIcon />,
+      path: "/admin/product-categories",
+    },
     // { text: "Laporan Owner", icon: <AnalyticsIcon />, path: "/owner-reports" },
     { text: "Logout", icon: <LogoutIcon />, path: null },
-  ]
+  ];
 
   const drawerContent = (
     <Box
@@ -242,7 +251,7 @@ const Navigation = () => {
       </List>
       <Divider sx={{ borderColor: "divider" }} />
     </Box>
-  )
+  );
 
   return (
     <>
@@ -260,7 +269,7 @@ const Navigation = () => {
         {drawerContent}
       </Drawer>
     </>
-  )
-}
+  );
+};
 
-export default Navigation
+export default Navigation;
