@@ -36,7 +36,7 @@ const ProductManagementGridTable = ({
   const [loading, setLoading] = useState(false)
   const [paginationModel, setPaginationModel] = useState(() => {
     // Gunakan pagination model terakhir jika tersedia, jika tidak gunakan default
-    return lastPaginationModel || { page: 0, pageSize: 5 }
+    return lastPaginationModel || { page: 1, pageSize: 25 }
   })
 
   const columns: GridColDef[] = [

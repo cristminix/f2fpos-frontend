@@ -1,8 +1,8 @@
 import { Box, Button, Typography } from "@mui/material"
 import { useState } from "react"
 import FileUploadService from "../../../services/FileUploadService"
-
-const ProductImageDisplay = () => {
+//@ts-ignore
+const ProductImageDisplay = ({ setFileId }) => {
   const [imagePreview, setImagePreview] = useState<string | null>(null)
 
   const handleImageUpload = async (
@@ -16,6 +16,7 @@ const ProductImageDisplay = () => {
       if (result.success && result.fileId) {
         const fileInfo: any = await FileUploadService.getFile(result.fileId)
         console.log(fileInfo)
+        setFileId(result.fileId)
         setImagePreview(fileInfo.content)
       } else if (result.error) {
         alert(result.error)

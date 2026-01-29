@@ -35,6 +35,7 @@ const ProductForm = (props: ProductFormProps) => {
       price: initialData?.price || 0,
       description: initialData?.description || "",
       sku: initialData?.sku || "",
+      fileId: initialData?.fileId || "",
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Nama Produk wajib diisi"),
@@ -54,7 +55,10 @@ const ProductForm = (props: ProductFormProps) => {
       onSubmit(values, formikBag)
     },
   })
-
+  function setFileId(fileId: string) {
+    console.log(fileId)
+    formik.setFieldValue("fileId", fileId)
+  }
   // Reset error ketika form dibuka kembali atau data awal berubah
   useEffect(() => {
     if (open) {
@@ -142,7 +146,7 @@ const ProductForm = (props: ProductFormProps) => {
               />
             </Box>
             <Box sx={{ flex: 1, mt: 2 }}>
-              <ProductImageDisplay />
+              <ProductImageDisplay setFileId={setFileId} />
             </Box>
           </Box>
           {localSubmitError && (

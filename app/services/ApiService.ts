@@ -3,13 +3,16 @@ export abstract class BaseApiService {
   path = "health"
   constructor() {
     const host = document.location.host
-    console.log(document.location.host)
+    // console.log(document.location.host)
     if (host.includes("b2b.pages.dev")) {
       this.apiBaseUrl = "https://b2b-backend.pawon.workers.dev/api"
     }
   }
   setApiBaseUrl(url: string) {
     this.apiBaseUrl = url
+  }
+  setPath(path: string) {
+    this.path = path
   }
   async getAccessToken() {
     let accessToken = localStorage.getItem("accessToken")
@@ -107,7 +110,7 @@ export abstract class BaseApiService {
       const queryString = new URLSearchParams(payload).toString()
       url += `?${queryString}`
     }
-    console.log({ endPoint: url })
+    // console.log({ endPoint: url })
     return await this.fetch(url, {
       method: "GET",
     })

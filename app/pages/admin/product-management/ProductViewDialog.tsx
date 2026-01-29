@@ -8,7 +8,11 @@ import {
   Box,
   CircularProgress,
 } from "@mui/material"
+import { useEffect, useState } from "react"
+import FileUploadService from "~/services/FileUploadService"
+import { ProductImageService } from "~/services/ProductImageService"
 import type { Product } from "~/types/product"
+import { ProductImageItem } from "./ProductImageItem"
 
 interface ProductViewDialogProps {
   open: boolean
@@ -23,6 +27,7 @@ const ProductViewDialog = ({
   product,
   loading,
 }: ProductViewDialogProps) => {
+  const [productImages, setProductImages] = useState([])
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("id-ID", {
       style: "currency",
@@ -30,7 +35,20 @@ const ProductViewDialog = ({
       minimumFractionDigits: 0,
     }).format(value)
   }
-
+  async function loadImages() {
+    console.log("Hello", product)
+    if (product) {
+      const { id: productId } = product
+      const productImageService = new ProductImageService()
+      const images = await productImageService.getListByProductId(productId)
+      console.log({ images })
+      // const fileInfo: any = await FileUploadService.getFile(product.id)
+      setProductImages(images)
+    }
+  }
+  useEffect(() => {
+    loadImages()
+  }, [product])
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>Detail Produk</DialogTitle>
@@ -47,22 +65,34 @@ const ProductViewDialog = ({
             <CircularProgress />
           </Box>
         ) : product ? (
-          <Box sx={{ mt: 2 }}>
-            <Typography variant="h6">
-              <strong>Nama Produk:</strong> {product.name}
-            </Typography>
-            <Typography variant="body1" sx={{ mt: 1 }}>
-              <strong>SKU:</strong> {product.sku}
-            </Typography>
-            <Typography variant="body1" sx={{ mt: 1 }}>
-              <strong>Berat:</strong> {product.weight} gram
-            </Typography>
-            <Typography variant="body1" sx={{ mt: 1 }}>
-              <strong>Harga:</strong> {formatCurrency(product.price)}
-            </Typography>
-            <Typography variant="body1" sx={{ mt: 1 }}>
-              <strong>Deskripsi:</strong> {product.description || "-"}
-            </Typography>
+          <Box>
+            {" "}
+            <Box sx={{ mt: 2 }}>
+              <Typography variant="h6">
+                <strong>Nama Produk:</strong> {product.name}
+              </Typography>
+              <Typography variant="body1" sx={{ mt: 1 }}>
+                <strong>SKU:</strong> {product.sku}
+              </Typography>
+              <Typography variant="body1" sx={{ mt: 1 }}>
+                <strong>Berat:</strong> {product.weight} gram
+              </Typography>
+              <Typography variant="body1" sx={{ mt: 1 }}>
+                <strong>Harga:</strong> {formatCurrency(product.price)}
+              </Typography>
+              <Typography variant="body1" sx={{ mt: 1 }}>
+                <strong>Deskripsi:</strong> {product.description || "-"}
+              </Typography>
+            </Box>
+            <Box>
+              {productImages.map((item, key) => {
+                return (
+                  <div key={key}>
+                    <ProductImageItem imageUpload={item} />
+                  </div>
+                )
+              })}
+            </Box>
           </Box>
         ) : (
           <Typography>Data produk tidak ditemukan.</Typography>
