@@ -94,6 +94,26 @@ const Navigation = () => {
       icon: <ManageAccountsIcon />,
       path: "/admin/users",
     },
+    {
+      text: "Manajemen Member",
+      icon: <GroupIcon />,
+      path: "/admin/members",
+    },
+    {
+      text: "Manajemen Product",
+      icon: <FastfoodIcon />,
+      path: "/admin/products",
+    },
+    {
+      text: "Alamat Member",
+      icon: <LocationOnIcon />,
+      path: "/admin/member-address",
+    },
+    {
+      text: "Rekening Bank Member",
+      icon: <AccountBalanceIcon />,
+      path: "/admin/member-bank-accounts",
+    },
     // { text: "Laporan Owner", icon: <AnalyticsIcon />, path: "/owner-reports" },
     { text: "Logout", icon: <LogoutIcon />, path: null },
   ]
