@@ -1,8 +1,8 @@
 import { Box, Button, Typography } from "@mui/material"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import FileUploadService from "../../../services/FileUploadService"
 //@ts-ignore
-const ProductImageDisplay = ({ setFileId }) => {
+const ProductImageDisplay = ({ setFileId, fileId }) => {
   const [imagePreview, setImagePreview] = useState<string | null>(null)
 
   const handleImageUpload = async (
@@ -14,15 +14,23 @@ const ProductImageDisplay = ({ setFileId }) => {
       const result: any = await FileUploadService.upload(file)
 
       if (result.success && result.fileId) {
-        const fileInfo: any = await FileUploadService.getFile(result.fileId)
-        console.log(fileInfo)
-        setFileId(result.fileId)
-        setImagePreview(fileInfo.content)
+        loadProductImage(result.fileId)
       } else if (result.error) {
         alert(result.error)
       }
     }
   }
+  async function loadProductImage(currentFileId: number) {
+    const fileInfo: any = await FileUploadService.getFile(currentFileId)
+    console.log(fileInfo)
+    setFileId(currentFileId)
+    setImagePreview(fileInfo.content)
+  }
+  useEffect(() => {
+    if (fileId) {
+      loadProductImage(fileId)
+    }
+  }, [fileId])
 
   return (
     <Box
@@ -46,11 +54,14 @@ const ProductImageDisplay = ({ setFileId }) => {
           onChange={handleImageUpload}
         />
         <Box sx={{ display: "flex", gap: 1, mb: 2 }}>
-          <label htmlFor="upload-image">
-            <Button variant="contained" component="span">
-              Upload Gambar
-            </Button>
-          </label>
+          {!imagePreview && (
+            <label htmlFor="upload-image">
+              <Button variant="contained" component="span">
+                Upload Gambar
+              </Button>
+            </label>
+          )}
+
           {imagePreview && (
             <Button
               variant="outlined"
@@ -83,9 +94,9 @@ const ProductImageDisplay = ({ setFileId }) => {
 
         {!imagePreview && (
           <>
-            <div>Kotak Informasi Tambahan</div>
+            <div>Silahkan upload gambar dari perangkat anda</div>
             <div style={{ marginTop: "8px", fontSize: "14px", color: "#666" }}>
-              Konten tambahan dapat ditampilkan di sini
+              Maksimal ukuran file 1MB dan berektensi jpg/png
             </div>
           </>
         )}

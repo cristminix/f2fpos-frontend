@@ -44,13 +44,15 @@ const ProductViewDialog = ({
       console.log({ images })
       // const fileInfo: any = await FileUploadService.getFile(product.id)
       setProductImages(images)
+    } else {
+      setProductImages([])
     }
   }
   useEffect(() => {
     loadImages()
   }, [product])
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
       <DialogTitle>Detail Produk</DialogTitle>
       <DialogContent>
         {loading ? (
@@ -65,7 +67,7 @@ const ProductViewDialog = ({
             <CircularProgress />
           </Box>
         ) : product ? (
-          <Box>
+          <Box className="flex">
             {" "}
             <Box sx={{ mt: 2 }}>
               <Typography variant="h6">
@@ -84,7 +86,7 @@ const ProductViewDialog = ({
                 <strong>Deskripsi:</strong> {product.description || "-"}
               </Typography>
             </Box>
-            <Box>
+            <Box className="w-[80%]">
               {productImages.map((item, key) => {
                 return (
                   <div key={key}>

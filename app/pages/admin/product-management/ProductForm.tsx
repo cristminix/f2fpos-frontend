@@ -13,6 +13,7 @@ import * as Yup from "yup"
 import { useState, useEffect } from "react"
 import type { Product } from "~/types/product"
 import ProductImageDisplay from "./ProductImageDisplay"
+import { ProductImageService } from "~/services/ProductImageService"
 
 interface ProductFormProps {
   open: boolean
@@ -25,7 +26,7 @@ interface ProductFormProps {
 const ProductForm = (props: ProductFormProps) => {
   const { open, onClose, onSubmit, initialData, submitError } = props
   const [localSubmitError, setLocalSubmitError] = useState<string | null>(null)
-
+  const [currentFileId, setCurrentFileId] = useState("")
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -59,10 +60,29 @@ const ProductForm = (props: ProductFormProps) => {
     console.log(fileId)
     formik.setFieldValue("fileId", fileId)
   }
+  async function loadImages() {
+    //@ts-ignore
+    const { id: productId } = initialData
+    const productImageService = new ProductImageService()
+    const images = await productImageService.getListByProductId(productId)
+    if (images.length > 0) {
+      const [currentImage] = images
+      const { key: fileId } = currentImage
+      console.log({ fileId })
+      setCurrentFileId(fileId)
+    }
+    // const fileInfo: any = await FileUploadService.getFile(product.id)
+    // setProductImages(images)
+  }
   // Reset error ketika form dibuka kembali atau data awal berubah
   useEffect(() => {
     if (open) {
       setLocalSubmitError(null)
+      if (initialData) {
+        loadImages()
+      }
+    } else {
+      setCurrentFileId("")
     }
   }, [open])
 
@@ -146,7 +166,10 @@ const ProductForm = (props: ProductFormProps) => {
               />
             </Box>
             <Box sx={{ flex: 1, mt: 2 }}>
-              <ProductImageDisplay setFileId={setFileId} />
+              <ProductImageDisplay
+                setFileId={setFileId}
+                fileId={currentFileId}
+              />
             </Box>
           </Box>
           {localSubmitError && (
