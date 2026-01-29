@@ -7,6 +7,7 @@ import {
   TextField,
   Box,
   Alert,
+  Autocomplete,
 } from "@mui/material"
 import { useFormik } from "formik"
 import * as Yup from "yup"
@@ -14,6 +15,8 @@ import { useState, useEffect } from "react"
 import type { Product } from "~/types/product"
 import ProductImageDisplay from "./ProductImageDisplay"
 import { ProductImageService } from "~/services/ProductImageService"
+import { ProductCategoryService } from "~/services/ProductCategoryService"
+import type { ProductCategory } from "~/types/product-category"
 
 interface ProductFormProps {
   open: boolean
@@ -27,6 +30,9 @@ const ProductForm = (props: ProductFormProps) => {
   const { open, onClose, onSubmit, initialData, submitError } = props
   const [localSubmitError, setLocalSubmitError] = useState<string | null>(null)
   const [currentFileId, setCurrentFileId] = useState("")
+  const [categories, setCategories] = useState<ProductCategory[]>([])
+  const [loadingCategories, setLoadingCategories] = useState(false)
+
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -37,6 +43,7 @@ const ProductForm = (props: ProductFormProps) => {
       description: initialData?.description || "",
       sku: initialData?.sku || "",
       fileId: initialData?.fileId || "",
+      categoryId: initialData?.categoryId || null,
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Nama Produk wajib diisi"),
@@ -50,6 +57,9 @@ const ProductForm = (props: ProductFormProps) => {
         .integer("Harga harus berupa bilangan bulat"),
       description: Yup.string(),
       sku: Yup.string().required("SKU wajib diisi"),
+      categoryId: Yup.number()
+        .nullable()
+        .required("Kategori produk wajib diisi"),
     }),
     onSubmit: (values: any, formikBag: any) => {
       setLocalSubmitError(null) // Reset error saat submit
@@ -90,6 +100,30 @@ const ProductForm = (props: ProductFormProps) => {
   useEffect(() => {
     setLocalSubmitError(submitError || null)
   }, [submitError])
+
+  // Load categories when dialog opens
+  useEffect(() => {
+    const loadCategories = async () => {
+      if (open) {
+        setLoadingCategories(true)
+        try {
+          const categoryService = new ProductCategoryService()
+          // Ambil semua kategori (gunakan page besar untuk mendapatkan semua)
+          const response = await categoryService.getList(1, 100)
+          console.log("Response dari API kategori:", response) // Log respons API
+          setCategories(response.records || [])
+          console.log("Daftar kategori yang dimuat:", response.records || []) // Log data kategori
+        } catch (error) {
+          console.error("Gagal memuat kategori produk:", error)
+          setCategories([])
+        } finally {
+          setLoadingCategories(false)
+        }
+      }
+    }
+
+    loadCategories()
+  }, [open])
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
@@ -145,6 +179,51 @@ const ProductForm = (props: ProductFormProps) => {
                 error={formik.touched.price && Boolean(formik.errors.price)}
                 helperText={formik.touched.price && formik.errors.price}
                 margin="normal"
+              />
+              <Autocomplete
+                fullWidth
+                options={categories}
+                getOptionLabel={(option) => option?.name || ""}
+                value={
+                  formik.values.categoryId !== null &&
+                  formik.values.categoryId !== undefined
+                    ? categories.find(
+                        (cat) => cat.id === formik.values.categoryId,
+                      ) || null
+                    : null
+                }
+                onChange={(_, newValue) => {
+                  formik.setFieldValue(
+                    "categoryId",
+                    newValue ? newValue.id : null,
+                  )
+                }}
+                loading={loadingCategories}
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                noOptionsText="Tidak ada kategori ditemukan"
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Kategori Produk"
+                    error={
+                      formik.touched.categoryId &&
+                      Boolean(formik.errors.categoryId)
+                    }
+                    helperText={
+                      formik.touched.categoryId && formik.errors.categoryId
+                    }
+                    margin="normal"
+                    InputProps={{
+                      ...params.InputProps,
+                      endAdornment: (
+                        <>
+                          {loadingCategories ? <span>Loading...</span> : null}
+                          {params.InputProps.endAdornment}
+                        </>
+                      ),
+                    }}
+                  />
+                )}
               />
               <TextField
                 fullWidth

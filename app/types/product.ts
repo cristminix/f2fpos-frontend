@@ -6,4 +6,5 @@ export interface Product {
   description: string
   sku: string
   fileId: string
+  categoryId?: number | null
 }
