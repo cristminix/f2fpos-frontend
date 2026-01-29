@@ -54,6 +54,7 @@ const ProductCategoryManagementPage = () => {
         "success",
       )
     } else {
+      console.log(response)
       setErrors({ submit: response.message })
       showSnackbar(response.message || "Terjadi kesalahan", "error")
     }

@@ -1,4 +1,4 @@
-export class BaseApiService {
+export abstract class BaseApiService {
   apiBaseUrl = "http://localhost:8787/api"
   path = "health"
   constructor() {

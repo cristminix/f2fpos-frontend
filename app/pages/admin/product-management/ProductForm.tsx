@@ -6,24 +6,26 @@ import {
   Button,
   TextField,
   Box,
+  Alert,
 } from "@mui/material"
 import { useFormik } from "formik"
 import * as Yup from "yup"
+import { useState, useEffect } from "react"
 import type { Product } from "~/types/product"
+import ProductImageDisplay from "./ProductImageDisplay"
 
 interface ProductFormProps {
   open: boolean
   onClose: () => void
   onSubmit: (values: any, formikBag: any) => void
   initialData?: Product | null
+  submitError?: string | null
 }
 
-const ProductForm = ({
-  open,
-  onClose,
-  onSubmit,
-  initialData,
-}: ProductFormProps) => {
+const ProductForm = (props: ProductFormProps) => {
+  const { open, onClose, onSubmit, initialData, submitError } = props
+  const [localSubmitError, setLocalSubmitError] = useState<string | null>(null)
+
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -48,9 +50,22 @@ const ProductForm = ({
       sku: Yup.string().required("SKU wajib diisi"),
     }),
     onSubmit: (values: any, formikBag: any) => {
+      setLocalSubmitError(null) // Reset error saat submit
       onSubmit(values, formikBag)
     },
   })
+
+  // Reset error ketika form dibuka kembali atau data awal berubah
+  useEffect(() => {
+    if (open) {
+      setLocalSubmitError(null)
+    }
+  }, [open])
+
+  // Update local error state when props error changes
+  useEffect(() => {
+    setLocalSubmitError(submitError || null)
+  }, [submitError])
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
@@ -59,71 +74,82 @@ const ProductForm = ({
           {initialData ? "Edit Produk" : "Tambah Produk Baru"}
         </DialogTitle>
         <DialogContent>
-          <Box sx={{ mt: 2 }}>
-            <TextField
-              fullWidth
-              label="Nama Produk"
-              name="name"
-              value={formik.values.name}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.touched.name && Boolean(formik.errors.name)}
-              helperText={formik.touched.name && formik.errors.name}
-              margin="normal"
-            />
-            <TextField
-              fullWidth
-              label="SKU"
-              name="sku"
-              value={formik.values.sku}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.touched.sku && Boolean(formik.errors.sku)}
-              helperText={formik.touched.sku && formik.errors.sku}
-              margin="normal"
-            />
-            <TextField
-              fullWidth
-              label="Berat (gram)"
-              name="weight"
-              type="number"
-              value={formik.values.weight}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.touched.weight && Boolean(formik.errors.weight)}
-              helperText={formik.touched.weight && formik.errors.weight}
-              margin="normal"
-            />
-            <TextField
-              fullWidth
-              label="Harga"
-              name="price"
-              type="number"
-              value={formik.values.price}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.touched.price && Boolean(formik.errors.price)}
-              helperText={formik.touched.price && formik.errors.price}
-              margin="normal"
-            />
-            <TextField
-              fullWidth
-              label="Deskripsi"
-              name="description"
-              multiline
-              rows={3}
-              value={formik.values.description}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={
-                formik.touched.description && Boolean(formik.errors.description)
-              }
-              helperText={
-                formik.touched.description && formik.errors.description
-              }
-              margin="normal"
-            />
+          <Box sx={{ display: "flex", gap: 2 }}>
+            <Box sx={{ flex: 1, mt: 2 }}>
+              <TextField
+                fullWidth
+                label="Nama Produk"
+                name="name"
+                value={formik.values.name}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={formik.touched.name && Boolean(formik.errors.name)}
+                helperText={formik.touched.name && formik.errors.name}
+                margin="normal"
+              />
+              <TextField
+                fullWidth
+                label="SKU"
+                name="sku"
+                value={formik.values.sku}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={formik.touched.sku && Boolean(formik.errors.sku)}
+                helperText={formik.touched.sku && formik.errors.sku}
+                margin="normal"
+              />
+              <TextField
+                fullWidth
+                label="Berat (gram)"
+                name="weight"
+                type="number"
+                value={formik.values.weight}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={formik.touched.weight && Boolean(formik.errors.weight)}
+                helperText={formik.touched.weight && formik.errors.weight}
+                margin="normal"
+              />
+              <TextField
+                fullWidth
+                label="Harga"
+                name="price"
+                type="number"
+                value={formik.values.price}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={formik.touched.price && Boolean(formik.errors.price)}
+                helperText={formik.touched.price && formik.errors.price}
+                margin="normal"
+              />
+              <TextField
+                fullWidth
+                label="Deskripsi"
+                name="description"
+                multiline
+                rows={3}
+                value={formik.values.description}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={
+                  formik.touched.description &&
+                  Boolean(formik.errors.description)
+                }
+                helperText={
+                  formik.touched.description && formik.errors.description
+                }
+                margin="normal"
+              />
+            </Box>
+            <Box sx={{ flex: 1, mt: 2 }}>
+              <ProductImageDisplay />
+            </Box>
           </Box>
+          {localSubmitError && (
+            <Box sx={{ py: 1 }}>
+              <Alert severity="error">{localSubmitError}</Alert>
+            </Box>
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose}>Batal</Button>

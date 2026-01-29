@@ -17,12 +17,16 @@ interface ProductManagementGridTableProps {
   onEditClick: (product: Product) => void
   onDeleteClick: (product: Product) => void
   onViewClick: (product: Product) => void
+  onSavePaginationModel?: (model: { page: number; pageSize: number }) => void
+  lastPaginationModel?: { page: number; pageSize: number }
 }
 
 const ProductManagementGridTable = ({
   onEditClick,
   onDeleteClick,
   onViewClick,
+  onSavePaginationModel,
+  lastPaginationModel,
 }: ProductManagementGridTableProps) => {
   const theme = useTheme()
   const service = new ProductService()
@@ -30,9 +34,9 @@ const ProductManagementGridTable = ({
   const [rows, setRows] = useState<Product[]>([])
   const [rowCount, setRowCount] = useState(0)
   const [loading, setLoading] = useState(false)
-  const [paginationModel, setPaginationModel] = useState({
-    page: 0,
-    pageSize: 5,
+  const [paginationModel, setPaginationModel] = useState(() => {
+    // Gunakan pagination model terakhir jika tersedia, jika tidak gunakan default
+    return lastPaginationModel || { page: 0, pageSize: 5 }
   })
 
   const columns: GridColDef[] = [
@@ -183,7 +187,12 @@ const ProductManagementGridTable = ({
         pageSizeOptions={[5, 10, 25]}
         paginationModel={paginationModel}
         paginationMode="server"
-        onPaginationModelChange={setPaginationModel}
+        onPaginationModelChange={(model) => {
+          setPaginationModel(model)
+          if (onSavePaginationModel) {
+            onSavePaginationModel(model)
+          }
+        }}
       />
     </Box>
   )

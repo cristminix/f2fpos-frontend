@@ -16,6 +16,11 @@ const ProductManagementPage = () => {
   const [viewingProduct, setViewingProduct] = useState<Product | null>(null)
   const [viewLoading, setViewLoading] = useState(false)
   const [refreshGrid, setRefreshGrid] = useState(0)
+  const [submitError, setSubmitError] = useState<string | null>(null)
+  const [lastPaginationModel, setLastPaginationModel] = useState({
+    page: 0,
+    pageSize: 5,
+  })
   const service = new ProductService()
 
   const handleOpenForm = (product: Product | null = null) => {
@@ -33,12 +38,12 @@ const ProductManagementPage = () => {
     const serviceAction = id ? service.update(id, data) : service.create(data)
 
     const response = await serviceAction
-
+    console.log(response.message)
     if (response.success) {
       handleCloseForm()
       setRefreshGrid((prev) => prev + 1)
     } else {
-      setErrors({ submit: response.message })
+      setSubmitError(response.message)
     }
   }
 
@@ -101,12 +106,15 @@ const ProductManagementPage = () => {
         onEditClick={handleOpenForm}
         onDeleteClick={handleOpenConfirm}
         onViewClick={handleOpenView}
+        onSavePaginationModel={setLastPaginationModel}
+        lastPaginationModel={lastPaginationModel}
       />
       <ProductForm
         open={isFormOpen}
         onClose={handleCloseForm}
         onSubmit={handleSubmitForm}
         initialData={editingProduct}
+        submitError={submitError}
       />
       <ConfirmationDialog
         open={isConfirmOpen}
