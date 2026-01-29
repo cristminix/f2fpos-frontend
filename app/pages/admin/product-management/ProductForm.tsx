@@ -167,6 +167,7 @@ const ProductForm = (props: ProductFormProps) => {
             </Box>
             <Box sx={{ flex: 1, mt: 2 }}>
               <ProductImageDisplay
+                setError={setLocalSubmitError}
                 setFileId={setFileId}
                 fileId={currentFileId}
               />

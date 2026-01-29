@@ -1,22 +1,34 @@
 import { Box, Button, Typography } from "@mui/material"
-import { useEffect, useState } from "react"
+import ImageIcon from "@mui/icons-material/Image"
+import DeleteIcon from "@mui/icons-material/Delete"
+import { useEffect, useState, useRef } from "react"
 import FileUploadService from "../../../services/FileUploadService"
 //@ts-ignore
-const ProductImageDisplay = ({ setFileId, fileId }) => {
+const ProductImageDisplay = ({ setFileId, fileId, setError }) => {
   const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleImageUpload = async (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    const file = event.target.files?.[0]
-
-    if (file) {
-      const result: any = await FileUploadService.upload(file)
-
+    if (event.target.files?.[0]) {
+      const result: any = await FileUploadService.upload(
+        event.target.files?.[0],
+      )
+      console.log({ result })
       if (result.success && result.fileId) {
+        // Reset input setelah upload berhasil
+        if (fileInputRef.current) {
+          fileInputRef.current.value = ""
+        }
+
         loadProductImage(result.fileId)
       } else if (result.error) {
-        alert(result.error)
+        setError(result.error)
+        // Tetap reset input meskipun gagal
+        if (fileInputRef.current) {
+          fileInputRef.current.value = ""
+        }
       }
     }
   }
@@ -48,16 +60,21 @@ const ProductImageDisplay = ({ setFileId, fileId }) => {
     >
       <Box sx={{ textAlign: "center", width: "100%" }}>
         <input
+          ref={fileInputRef}
           accept="image/*"
           id="upload-image"
           type="file"
           style={{ display: "none" }}
           onChange={handleImageUpload}
         />
-        <Box sx={{ display: "flex", gap: 1, mb: 2 }}>
+        <Box sx={{ display: "flex", gap: 1, mb: 2 }} className="text-center">
           {!imagePreview && (
-            <label htmlFor="upload-image">
-              <Button variant="contained" component="span">
+            <label htmlFor="upload-image" className="mx-auto">
+              <Button
+                variant="contained"
+                component="span"
+                startIcon={<ImageIcon />}
+              >
                 Upload Gambar
               </Button>
             </label>
@@ -68,6 +85,7 @@ const ProductImageDisplay = ({ setFileId, fileId }) => {
               variant="outlined"
               color="error"
               onClick={() => setImagePreview(null)}
+              startIcon={<DeleteIcon />}
             >
               Hapus Gambar
             </Button>
