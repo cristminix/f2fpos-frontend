@@ -19,9 +19,15 @@ export const ProductImageItem = ({ imageUpload }) => {
   }, [])
   if (imageContent.length > 0) {
     return (
-      <>
+      <div
+        className="w-[250px] h-[250px] my-4 "
+        style={{
+          backgroundImage: `url(${imageContent}) center center`,
+          backgroundAttachment: "cover",
+        }}
+      >
         <img src={imageContent} />
-      </>
+      </div>
     )
   }
 }

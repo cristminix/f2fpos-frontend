@@ -36,7 +36,7 @@ const ProductViewDialog = ({
     }).format(value)
   }
   async function loadImages() {
-    console.log("Hello", product)
+    // console.log("Hello", product)
     if (product) {
       const { id: productId } = product
       const productImageService = new ProductImageService()
@@ -67,7 +67,7 @@ const ProductViewDialog = ({
             <CircularProgress />
           </Box>
         ) : product ? (
-          <Box className="flex">
+          <Box className="">
             {" "}
             <Box sx={{ mt: 2 }}>
               <Typography variant="h6">

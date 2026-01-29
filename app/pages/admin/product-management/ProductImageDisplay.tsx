@@ -21,6 +21,7 @@ const ProductImageDisplay = ({ setFileId, fileId }) => {
     }
   }
   async function loadProductImage(currentFileId: number) {
+    //@ts-ignore
     const fileInfo: any = await FileUploadService.getFile(currentFileId)
     console.log(fileInfo)
     setFileId(currentFileId)
