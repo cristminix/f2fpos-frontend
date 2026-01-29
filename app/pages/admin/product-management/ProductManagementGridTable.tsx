@@ -3,6 +3,7 @@ import {
   DataGrid,
   type GridColDef,
   type GridPaginationModel,
+  type GridSortModel,
 } from "@mui/x-data-grid"
 import {
   Edit as EditIcon,
@@ -38,6 +39,8 @@ const ProductManagementGridTable = ({
     // Gunakan pagination model terakhir jika tersedia, jika tidak gunakan default
     return lastPaginationModel || { page: 1, pageSize: 25 }
   })
+
+  const [sortModel, setSortModel] = useState<GridSortModel>([])
 
   const columns: GridColDef[] = [
     {
@@ -126,9 +129,22 @@ const ProductManagementGridTable = ({
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true)
+
+      // Ekstrak informasi sorting
+      let sortBy = ""
+      let sortOrder = ""
+
+      if (sortModel.length > 0) {
+        const sort = sortModel[0]
+        sortBy = sort.field || ""
+        sortOrder = sort.sort || ""
+      }
+
       const response = await service.getList(
         paginationModel.page + 1,
         paginationModel.pageSize,
+        sortBy,
+        sortOrder,
       )
       if (response && response.records) {
         setRows(response.records)
@@ -137,7 +153,7 @@ const ProductManagementGridTable = ({
       setLoading(false)
     }
     fetchData()
-  }, [paginationModel])
+  }, [paginationModel, sortModel])
 
   return (
     <Box
@@ -187,6 +203,11 @@ const ProductManagementGridTable = ({
         pageSizeOptions={[5, 10, 25]}
         paginationModel={paginationModel}
         paginationMode="server"
+        sortModel={sortModel}
+        sortingMode="server"
+        onSortModelChange={(model) => {
+          setSortModel(model)
+        }}
         onPaginationModelChange={(model) => {
           setPaginationModel(model)
           if (onSavePaginationModel) {

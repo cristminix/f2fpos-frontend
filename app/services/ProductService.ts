@@ -3,8 +3,11 @@ import { BaseApiService } from "./ApiService"
 export class ProductService extends BaseApiService {
   path = "ProductService"
 
-  async getList(page = 1, limit = 10) {
-    return await this.get("", { page, limit })
+  async getList(page = 1, limit = 10, sortBy = "", sortOrder = "") {
+    const params: any = { page, limit }
+    if (sortBy) params.sortBy = sortBy
+    if (sortOrder) params.sortOrder = sortOrder
+    return await this.get("", params)
   }
 
   async create(payload: any) {
