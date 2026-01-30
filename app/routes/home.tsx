@@ -5,11 +5,12 @@ import ProtectedLayout from "~/components/layouts/ProtectedLayout"
 import React, { useEffect } from "react"
 import { useNavigate } from "react-router"
 import { useAuth } from "../contexts/AuthContext"
+import HomePage from "~/pages/web/HomePage"
 
-export function meta({}: Route.MetaArgs) {
+export function meta({ }: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: "B2B App" },
+    { name: "description", content: "Welcome to B2B App!" },
   ]
 }
 
@@ -19,15 +20,9 @@ export default function Home() {
   useEffect(() => {
     // Panggil fungsi logout untuk menghapus sesi pengguna
     // Arahkan pengguna ke halaman login setelah logout
-    navigate("/admin/users")
+    // navigate("/admin/users")
   }, [navigate])
   return (
-    <ProtectedRoute>
-      <ProtectedLayout>
-        <div>
-          <p>redirecting ...</p>
-        </div>
-      </ProtectedLayout>
-    </ProtectedRoute>
+    <HomePage />
   )
 }

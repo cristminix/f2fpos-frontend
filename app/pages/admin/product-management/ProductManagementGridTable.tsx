@@ -158,7 +158,8 @@ const ProductManagementGridTable = ({
   return (
     <Box
       sx={{
-        height: 400,
+        height: "auto",
+        minHeight: "250px",
         width: "100%",
         "& .MuiDataGrid-root": {
           border: `1px solid ${theme.palette.divider}`,
