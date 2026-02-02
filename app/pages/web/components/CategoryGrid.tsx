@@ -8,12 +8,7 @@ interface CategoryGridProps {
 }
 
 // Default categories with emojis as fallback
-const defaultCategories = [
-    { emoji: '🧂', name: 'GARAM' },
-    { emoji: '�', name: 'HERBAL' },
-    { emoji: '�️', name: 'REMPAH' },
-    { emoji: '�', name: 'BUMBU' },
-    { emoji: '�', name: 'BUMBU PASTA' }
+const defaultCategories: any = [
 ]
 
 export const CategoryGrid: React.FC<CategoryGridProps> = ({ onCategoryClick }) => {

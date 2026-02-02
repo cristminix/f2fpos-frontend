@@ -10,7 +10,8 @@ import {
   Alert,
 } from "@mui/material"
 import type { ProductCategory } from "~/types/product-category"
-import ProductCategoryImageDisplay from "../../category-management/ProductCategoryImageDisplay"
+import ProductCategoryImageDisplay from "./ProductCategoryImageDisplay"
+import { ProductCategoryImageService } from "~/services/ProductCategoryImageService"
 
 interface ProductCategoryFormProps {
   open: boolean
@@ -28,7 +29,22 @@ export const ProductCategoryForm: React.FC<ProductCategoryFormProps> = ({
   const [name, setName] = useState("")
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [currentFileId, setCurrentFileId] = useState("")
-
+  const [localSubmitError, setLocalSubmitError] = useState<string | null>(null)
+  async function loadImages() {
+    //@ts-ignore
+    const { id: productCategoryId } = initialData
+    const productImageService = new ProductCategoryImageService()
+    const images = await productImageService.getListByProductCategoryId(productCategoryId)
+    console.log({ images })
+    if (images.length > 0) {
+      const [currentImage] = images
+      const { key: fileId } = currentImage
+      console.log({ fileId })
+      setCurrentFileId(fileId)
+    }
+    // const fileInfo: any = await FileUploadService.getFile(product.id)
+    // setProductImages(images)
+  }
   useEffect(() => {
     if (initialData) {
       setName(initialData.name)
@@ -83,7 +99,17 @@ export const ProductCategoryForm: React.FC<ProductCategoryFormProps> = ({
       handleSubmit()
     }
   }
-
+  useEffect(() => {
+    if (open) {
+      setLocalSubmitError(null)
+      if (initialData) {
+        console.log({ initialData })
+        loadImages()
+      }
+    } else {
+      setCurrentFileId("")
+    }
+  }, [open])
   return (
     <Dialog
       open={open}

@@ -1,18 +1,10 @@
 import React, { useEffect, useState } from "react"
-import {
-  Box,
-  Typography,
-  Container,
-  IconButton,
-  useTheme,
-  Button,
-} from "@mui/material"
-import { DataGrid, type GridColDef, GridToolbar } from "@mui/x-data-grid"
-
-// Icons
-import EditIcon from "@mui/icons-material/Edit"
-import DeleteIcon from "@mui/icons-material/Delete"
+import { Box, Typography, Button } from "@mui/material"
+import AddIcon from "@mui/icons-material/Add"
 import { ProductCategoryService } from "~/services/ProductCategoryService"
+import { ProductCategoryGrid } from "./category-management/ProductCategoryGrid"
+import { ProductCategoryForm } from "./category-management/ProductCategoryForm"
+import type { ProductCategory } from "~/types/product-category"
 
 interface ProductCategoryData {
   id: number
@@ -29,10 +21,10 @@ interface ApiResponse {
 }
 
 const ProductCategoryManagementPage: React.FC = () => {
-  const theme = useTheme()
   const service = new ProductCategoryService()
   // State management for server-side sorting and pagination
   const [data, setData] = useState<ProductCategoryData[]>([])
+  // const [formData, setFormData] = useState<ProductCategoryData | null>(null)
   const [page, setPage] = useState(0)
   const [pageSize, setPageSize] = useState(5)
   const [totalRows, setTotalRows] = useState(0)
@@ -40,70 +32,11 @@ const ProductCategoryManagementPage: React.FC = () => {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc")
   const [loading, setLoading] = useState(false)
 
-  // Definisi kolom
-  const columns: GridColDef[] = [
-    {
-      field: "name",
-      headerName: "Nama Kategori",
-      flex: 1,
-      renderHeader: (params) => (
-        <Box display="flex" alignItems="center">
-          {params.colDef.headerName}↓
-        </Box>
-      ),
-      sortComparator: (v1, v2) => {
-        if (typeof v1 === "string" && typeof v2 === "string") {
-          return v1.localeCompare(v2)
-        }
-        return 0
-      },
-      cellClassName: "MuiDataGrid-cell--textPrimary",
-    },
-    {
-      field: "createdAt",
-      headerName: "Tanggal Dibuat",
-      flex: 1,
-      type: "date",
-      valueFormatter: (value) => {
-        if (!value) return ""
-        return new Date(value).toLocaleDateString("id-ID")
-      },
-    },
-    {
-      field: "actions",
-      headerName: "Aksi",
-      width: 120,
-      sortable: false,
-      renderCell: (params) => (
-        <Box display="flex" gap={1}>
-          <IconButton
-            size="small"
-            onClick={() => console.log("Edit:", params.row.id)}
-            sx={{
-              color: theme.palette.primary.main,
-              "&:hover": {
-                backgroundColor: theme.palette.action.hover,
-              },
-            }}
-          >
-            <EditIcon fontSize="small" />
-          </IconButton>
-          <IconButton
-            size="small"
-            onClick={() => console.log("Delete:", params.row.id)}
-            sx={{
-              color: theme.palette.error.main,
-              "&:hover": {
-                backgroundColor: theme.palette.action.hover,
-              },
-            }}
-          >
-            <DeleteIcon fontSize="small" />
-          </IconButton>
-        </Box>
-      ),
-    },
-  ]
+
+  // Form dialog state
+  const [formOpen, setFormOpen] = useState(false)
+  const [selectedCategory, setSelectedCategory] =
+    useState<ProductCategory | null>(null)
 
   async function loadGridData() {
     setLoading(true)
@@ -125,6 +58,55 @@ const ProductCategoryManagementPage: React.FC = () => {
     }
   }
 
+  const handleAddClick = () => {
+    setSelectedCategory(null)
+    setFormOpen(true)
+  }
+
+  const handleEditClick = async (id: number) => {
+    try {
+      const response = await service.getById(id)
+      const category = response.data || response
+      setSelectedCategory(category)
+      setFormOpen(true)
+    } catch (error) {
+      console.error("Error loading category:", error)
+    }
+  }
+
+  const handleDeleteClick = async (id: number) => {
+    if (window.confirm("Apakah Anda yakin ingin menghapus kategori ini?")) {
+      try {
+        await service.delete(id)
+        await loadGridData()
+      } catch (error) {
+        console.error("Error deleting category:", error)
+      }
+    }
+  }
+
+  const handleFormSubmit = async (values: any, formik: any) => {
+    try {
+      if (selectedCategory?.id) {
+        await service.update(selectedCategory.id, values)
+      } else {
+        await service.create(values)
+      }
+      setFormOpen(false)
+      await loadGridData()
+    } catch (error: any) {
+      console.error("Error submitting form:", error)
+      formik.setErrors({
+        submit: error.message || "Terjadi kesalahan saat menyimpan data",
+      })
+    }
+  }
+
+  const handleFormClose = () => {
+    setFormOpen(false)
+    setSelectedCategory(null)
+  }
+
   useEffect(() => {
     loadGridData()
   }, [page, pageSize, sortField, sortOrder])
@@ -142,83 +124,39 @@ const ProductCategoryManagementPage: React.FC = () => {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => console.log("Tambah kategori clicked")}
+          onClick={handleAddClick}
+          startIcon={<AddIcon />}
         >
-          + Tambah Kategori
+          Tambah Kategori
         </Button>
       </Box>
 
-      <Box
-        sx={{
-          height: 400,
-          width: "100%",
-          "& .MuiDataGrid-root": {
-            border: `1px solid ${theme.palette.divider}`,
-          },
-          "& .MuiDataGrid-columnHeaders": {
-            backgroundColor:
-              theme.palette.mode === "light"
-                ? theme.palette.grey[100]
-                : theme.palette.grey[900],
-          },
-          "& .MuiDataGrid-cell": {
-            borderBottom: `1px solid ${theme.palette.divider}`,
-            color: theme.palette.text.primary,
-          },
-          "& .MuiDataGrid-row:hover": {
-            backgroundColor: theme.palette.action.hover,
-          },
+      <ProductCategoryGrid
+        data={data}
+        totalRows={totalRows}
+        loading={loading}
+        page={page}
+        pageSize={pageSize}
+        sortField={sortField}
+        sortOrder={sortOrder}
+        onPaginationChange={(newPage, newPageSize) => {
+          setPage(newPage)
+          setPageSize(newPageSize)
         }}
-      >
-        <DataGrid
-          rows={data}
-          columns={columns}
-          rowCount={totalRows}
-          pageSizeOptions={[5, 10, 25]}
-          paginationMode="server"
-          sortingMode="server"
-          onPaginationModelChange={(model) => {
-            setPage(model.page)
-            setPageSize(model.pageSize)
-          }}
-          onSortModelChange={(model) => {
-            if (model.length > 0) {
-              setSortField(model[0].field)
-              setSortOrder(model[0].sort === "desc" ? "desc" : "asc")
-            } else {
-              setSortField("name")
-              setSortOrder("asc")
-            }
-          }}
-          initialState={{
-            pagination: {
-              paginationModel: { page: 0, pageSize: 5 },
-            },
-            sorting: {
-              sortModel: [{ field: "name", sort: "asc" }],
-            },
-          }}
-          loading={loading}
-          slots={{
-            toolbar: GridToolbar,
-          }}
-          slotProps={{
-            toolbar: {
-              showQuickFilter: true,
-            },
-          }}
-          sx={{
-            border: 0,
-            "& .MuiDataGrid-columnSeparator": {
-              display: "none",
-            },
-            "& .MuiDataGrid-footerContainer": {
-              borderTop: `1px solid ${theme.palette.divider}`,
-              color: theme.palette.text.primary,
-            },
-          }}
-        />
-      </Box>
+        onSortChange={(field, order) => {
+          setSortField(field)
+          setSortOrder(order)
+        }}
+        onEdit={handleEditClick}
+        onDelete={handleDeleteClick}
+      />
+
+      <ProductCategoryForm
+        open={formOpen}
+        onClose={handleFormClose}
+        onSubmit={handleFormSubmit}
+        initialData={selectedCategory}
+      />
     </Box>
   )
 }
